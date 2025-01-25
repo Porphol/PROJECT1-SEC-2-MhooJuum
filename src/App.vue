@@ -12,6 +12,11 @@ const hitObject = () => {
   console.log(score.value);
 }
 
+const position = ref(0)
+const random = (num) =>{
+  position.value = Math.floor(Math.random() * num) + 1
+}
+
 </script>
 
 <template>
@@ -29,6 +34,11 @@ const hitObject = () => {
 
     <div v-show="currentView === 'game'" class="border">
       <p>game</p>
+      <div v-for="hole in 9" :key="hole">
+        <h1 class="text-7xl text-yellow-500" v-show="position === hole">JuumMhoo</h1>
+        <h1 class="text-7xl text-yellow-500" v-show="position !== hole">MhooJuum</h1>
+      </div>
+      <button v-on:click="random(9)">hey</button>
       <button @click="handleButtonClick('home')" class="py-1 px-3 bg-yellow-200 rounded-lg">
         Back
       </button>
@@ -41,6 +51,8 @@ const hitObject = () => {
       </button>
     </div>
   </div>
-</template>
+</template>  
 
-<style scoped></style>
+<style scoped>
+
+</style>
