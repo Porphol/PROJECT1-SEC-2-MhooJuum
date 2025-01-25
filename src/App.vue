@@ -23,7 +23,7 @@ const countDown = (func, duration, delay = 1000) => {
   const interval = setInterval(() => {
     func()
     time.value--
-    if (time.value === 0) {
+    if (time.value <= 0) {
       clearInterval(interval)
     }
   }, delay)
