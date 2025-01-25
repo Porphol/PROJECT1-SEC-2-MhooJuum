@@ -1,27 +1,50 @@
 <script setup>
 import { ref } from "vue";
 
-const isHomeVisible = ref(true);
+const currentView = ref("home");
 
-const handlePlayButtonClick = () => {
-  isHomeVisible.value = !isHomeVisible.value;
+const handleButtonClick = (view) => {
+  currentView.value = view;
 };
 </script>
 
 <template>
   <div class="w-full max-w-4xl">
-    <div v-show="isHomeVisible" class="border">
+    <div v-show="currentView === 'home'" class="border">
       <p>mhoojuum</p>
       <button
-        @click="handlePlayButtonClick"
+        @click="handleButtonClick('game')"
         class="py-1 px-3 bg-yellow-200 rounded-lg"
       >
         PLAY
       </button>
+      <br />
+      <button
+        @click="handleButtonClick('howToPlay')"
+        class="py-1 px-3 bg-yellow-200 rounded-lg"
+      >
+        HOW TO PLAY
+      </button>
     </div>
 
-    <div v-show="!isHomeVisible" class="border">
+    <div v-show="currentView === 'game'" class="border">
       <p>game</p>
+      <button
+        @click="handleButtonClick('home')"
+        class="py-1 px-3 bg-yellow-200 rounded-lg"
+      >
+        Back
+      </button>
+    </div>
+
+    <div v-show="currentView === 'howToPlay'" class="border">
+      <p>How to play</p>
+      <button
+        @click="handleButtonClick('home')"
+        class="py-1 px-3 bg-yellow-200 rounded-lg"
+      >
+        BACK
+      </button>
     </div>
   </div>
 </template>
