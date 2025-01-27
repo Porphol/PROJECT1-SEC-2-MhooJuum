@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+@font-face {
+    font-family: Muffin;
+    src: url("./fonts/Muffin.otf");
+}

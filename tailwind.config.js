@@ -5,7 +5,14 @@ export default {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        "bgHome" : "url('src/assets/image/MhooJuum.png')"
+      },
+      fontFamily: {
+        Muffin: ['Muffin']
+      }
+    },
   },
   plugins: [],
 }

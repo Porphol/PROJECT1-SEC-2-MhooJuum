@@ -2,6 +2,8 @@
 import { ref } from "vue"
 
 const currentView = ref("home")
+
+
 const handleButtonClick = (view) => {
   currentView.value = view
 }
@@ -31,22 +33,28 @@ const countDown = (func, duration, delay = 1000) => {
 </script>
 
 <template>
-  <div class="w-full max-w-4xl">
-    <div v-show="currentView === 'home'" class="border">
-      <p>mhoojuum</p>
+  <div>
+    <!-- Div Home Page -->
+    <div v-show="currentView === 'home'" class="border bg-cover bg-no-repeat bg-center bg-bgHome">
+      <div class=" flex justify-center items-center flex-col my-32 gap-[5rem]">
+        <p class=" text-center text-8xl font-Muffin tracking-wider">MHOOJUUM</p>
+        <div class="relative flex flex-col items-center">
+      <img src="./assets/image/MhooJuum_logo.png" alt="" class="" width="300">
       <button
         @click="handleButtonClick('game'), countDown(() => random(9), 5)"
-        class="py-1 px-3 bg-yellow-200 rounded-lg"
+        class="py-[1rem] px-[7rem] bg-yellow-300 rounded-[2.5rem] text-7xl font-Muffin tracking-wide"
       >
         PLAY
       </button>
-      <br />
+    </div>
+
+      </div>
       <button
-        @click="handleButtonClick('howToPlay')"
-        class="py-1 px-3 bg-yellow-200 rounded-lg"
-      >
-        HOW TO PLAY
-      </button>
+          @click="handleButtonClick('howToPlay')"
+          class="py-1 px-3 bg-yellow-200 rounded-lg"
+        >
+          HOW TO PLAY
+        </button>
     </div>
 
     <div v-show="currentView === 'game'" class="border">
