@@ -17,11 +17,34 @@ const random = (num) => {
 }
 
 const time = ref(0)
+const startTime = ref(0)
 
-const countDown = (func, duration, delay = 1000) => {
-  time.value = duration
+const gameStart = (duration) => {
+  startTime.value = 3
+  const startInterval = setInterval(() => {
+    startTime.value--
+    if (startTime.value <= 0) {
+      clearInterval(startInterval)
+      gameCountDown(() => random(9),duration)
+      countDown(duration)
+    }
+  }, 1000)
+}
+
+const gameCountDown = (func, duration, delay = 1500) => {
+  let gameTime = Math.floor(duration * (1000 / delay))
   const interval = setInterval(() => {
     func()
+    gameTime--
+    if (gameTime <= 0) {
+      clearInterval(interval)
+    }
+  }, delay)
+}
+
+const countDown = (duration, delay = 1000) => {
+  time.value = duration
+  const interval = setInterval(() => {
     time.value--
     if (time.value <= 0) {
       clearInterval(interval)
@@ -35,7 +58,7 @@ const countDown = (func, duration, delay = 1000) => {
     <div v-show="currentView === 'home'" class="border">
       <p>mhoojuum</p>
       <button
-        @click="handleButtonClick('game'), countDown(() => random(9), 5)"
+        @click="handleButtonClick('game'), gameStart(90)"
         class="py-1 px-3 bg-yellow-200 rounded-lg"
       >
         PLAY
@@ -52,13 +75,17 @@ const countDown = (func, duration, delay = 1000) => {
     <div v-show="currentView === 'game'" class="border">
       <p>game</p>
       <div>
+        {{ Math.floor(startTime / 60) }}:{{ startTime % 60 < 10 ? "0" : ""
+        }}{{ startTime % 60 }}
+      </div>
+      <div>
         {{ Math.floor(time / 60) }}:{{ time % 60 < 10 ? "0" : ""
         }}{{ time % 60 }}
       </div>
       <div>{{ score }}</div>
       <div v-for="hole in 9" :key="hole">
         <h1
-          class="text-7xl text-yellow-500"
+          class="text-7xl text-green-500"
           v-show="position === hole"
           @click="hitObject()"
         >
