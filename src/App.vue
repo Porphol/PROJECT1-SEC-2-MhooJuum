@@ -1,19 +1,25 @@
 <script setup>
   import { ref } from "vue";
 
+  // Game controller
+  let gameStatus = true
+
+
   // Count score
   const score = ref(0)
-  const hitObject = () => {
-    // add combo
-    countCombo()
-    console.log("Combo: " + combo.value);
+  const clickObject = () => {
+    if (gameStatus) {
+      // add combo
+      countCombo()
+      console.log("Combo: " + combo.value);
 
-    // add score
-    score.value = Math.round(score.value + (1 * (1 + 0.1 * (combo.value - 1))))
-    console.log("Score: " + score.value);
-    console.log("Cal bonus: " + (1 * (1 + 0.1 * (combo.value - 1))));
+      // add score
+      score.value += (1 * (1 + 0.1 * (combo.value - 1)))
+      console.log("Score: " + score.value);
+      console.log("Cal bonus: +" + (1 * (1 + 0.1 * (combo.value - 1))));
 
-    console.log("###############");
+      console.log("###############");
+    }
   }
 
 
@@ -32,16 +38,64 @@
     lastClick = currentClick
   }
 
+
+  // Life point
+  const lifePoint = ref([true, true, true])
+  let indexLifePoint = lifePoint.value.length - 1
+  const clickMiss = () => {
+    if (gameStatus) {
+      lifePoint.value[indexLifePoint] = false
+      indexLifePoint -= 1
+      combo.value = 0
+
+      console.log("HP -1 -> " + lifePoint.value.filter(Boolean).length);
+      console.log("Life Point: " + lifePoint.value);
+
+      // Life point = 0
+      if(!lifePoint.value.includes(true)) gameOver()
+    }
+  }
+
+
+  // Game over
+  const gameOver = () => {
+    gameStatus = false
+
+    console.log("Game over");
+    console.log("Game status: " + gameStatus);
+  }
 </script>
 
 <template>
-  <div class="my-4">
-    <p>Score: <span>{{ score }}</span></p>
-    <p>Combo: <span>{{ combo }}</span></p>
-  </div>
-  <div  v-on:click="hitObject" class="border border-red-600 bg-red-400 px-3 py-1 text-white text-xl inline-block">
-    <p>Mhoo</p>
-  </div>
+  <div class="ml-2">
+    <!-- SCORE -->
+    <div>
+      <div class="my-4">
+        <p>Score: <span>{{ Math.round(score) }}</span></p>
+        <p>Combo: <span>{{ combo }}</span></p>
+      </div>
+      <!-- bt Hit -->
+      <div  @click="clickObject" class="border border-blue-600 bg-blue-400 px-3 py-1 text-white text-xl inline-block">
+        <p>Hit</p>
+      </div>
+    </div>
+
+    <!-- LIFE -->
+    <div>
+      <div class="my-4">
+        <div class="flex flex-row gap-5">
+          <div v-for="hp in lifePoint">
+            <p v-if="hp" class="broder rounded-full bg-green-600 p-1 text-xs">HP</p>
+          </div>
+        </div>
+        <p v-if="!lifePoint.includes(true)" class="underline ">GAME OVER</p>
+      </div>
+      <!-- bt Miss -->
+      <div  @click="clickMiss" class="border border-red-600 bg-red-400 px-3 py-1 text-white text-xl inline-block">
+        <p>Miss</p>
+      </div>
+    </div>
+  </div>  
 </template>
 <style scoped>
 
