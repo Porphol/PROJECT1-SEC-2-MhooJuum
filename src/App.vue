@@ -1,11 +1,11 @@
 <script setup>
-import { ref } from "vue";
-const currentView = ref("home");
+import { ref } from "vue"
+const currentView = ref("home")
 const handleButtonClick = (view) => {
   currentView.value = view;
 };
 
-const position = ref(0);
+const position = ref(0)
 const isMole = ref(true)
 const isHit = ref(false)
 const random = (num) => {
@@ -15,55 +15,71 @@ const random = (num) => {
 
 const time = ref(0)
 const startTime = ref(0)
-
+let startInterval = null
 const gameStart = (duration) => {
   startTime.value = 3
-  const startInterval = setInterval(() => {
+  startInterval = setInterval(() => {
     startTime.value--
     if (startTime.value <= 0) {
       clearInterval(startInterval)
-      gameCountDown(() => random(9), duration)
+      gameCountDown(() => random(9))
       countDown(duration)
     }
   }, 1000)
 }
 
-const gameCountDown = (func, duration, delay = 1500) => {
-  let gameTime = Math.floor(duration * (1000 / delay))
-  const interval = setInterval(() => {
+let gameInterval = null
+const gameCountDown = (func, delay = 1500) => {
+  gameInterval = setInterval(() => {
     func()
     isHit.value = false
-    gameTime--
-    if (gameTime <= 0) {
-      clearInterval(interval)
+  }, delay)
+}
+
+let timeInterval = null
+const countDown = (duration, delay = 1000) => {
+  time.value = duration
+  timeInterval = setInterval(() => {
+    time.value--
+    if (time.value <= 0) {
+      clearInterval(timeInterval)
+      clearInterval(gameInterval)
+      gameOver()
+      toggleModal("Time's up", `Your final score is ${Math.round(score.value)}`)
     }
   }, delay)
 }
 
-const countDown = (duration, delay = 1000) => {
-  time.value = duration
-  const interval = setInterval(() => {
-    time.value--
-    if (time.value <= 0) {
-      clearInterval(interval);
-      gameOver()
-      toggleModal("Time's up", `Your final score is ${Math.round(score.value)}`);
-    }
-  }, delay);
-};
-
-const showModal = ref(false);
-const modalTitle = ref("");
-const modalMessage = ref("");
+const showModal = ref(false)
+const modalTitle = ref("")
+const modalMessage = ref("")
 const toggleModal = (title, message) => {
-  modalTitle.value = title;
-  modalMessage.value = message;
-  showModal.value = !showModal.value;
+  modalTitle.value = title
+  modalMessage.value = message
+  showModal.value = !showModal.value
 };
 
 
 // Game controller
 let gameStatus = true
+const resetGame = () => {
+  gameStatus = true
+  score.value = 0
+  combo.value = 0
+  countdownCombo.value = 0
+  lifePoint.value = [true, true, true]
+  indexLifePoint = lifePoint.value.length - 1
+  time.value = 0
+  startTime.value = 0
+  position.value = 0
+  isHit.value = false
+  isMole.value = true
+  clearInterval(countdownTimer)
+  clearInterval(startInterval)
+  clearInterval(timeInterval)
+  clearInterval(gameInterval) 
+  
+}
 
 
 // Count score
@@ -72,14 +88,14 @@ const clickObject = () => {
   if (!gameStatus) return
   // add combo
   countCombo()
-  console.log("Combo: " + combo.value);
+  console.log("Combo: " + combo.value)
 
   // add score
   score.value += (1 * (1 + 0.1 * (combo.value - 1)))
   console.log("Score: " + score.value);
   console.log("Cal bonus: +" + (1 * (1 + 0.1 * (combo.value - 1))));
 
-  console.log("###############");
+  console.log("###############")
 
   isHit.value = true
 }
@@ -135,8 +151,8 @@ const clickMiss = () => {
   indexLifePoint -= 1
   combo.value = 0
 
-  console.log("HP -1 -> " + lifePoint.value.filter(Boolean).length);
-  console.log("Life Point: " + lifePoint.value);
+  console.log("HP -1 -> " + lifePoint.value.filter(Boolean).length)
+  console.log("Life Point: " + lifePoint.value)
 
   isHit.value = true
 
@@ -149,8 +165,8 @@ const clickMiss = () => {
 const gameOver = () => {
   gameStatus = false
 
-  console.log("Game over");
-  console.log("Game status: " + gameStatus);
+  console.log("Game over")
+  console.log("Game status: " + gameStatus)
 }
 </script>
 
@@ -159,7 +175,7 @@ const gameOver = () => {
   <div class="w-full max-w-4xl">
     <div v-show="currentView === 'home'" class="border">
       <p>mhoojuum</p>
-      <button @click="handleButtonClick('game'), gameStart(90)" class="py-1 px-3 bg-yellow-200 rounded-lg">
+      <button @click="handleButtonClick('game'), gameStart(10)" class="py-1 px-3 bg-yellow-200 rounded-lg">
         PLAY
       </button>
       <br />
@@ -188,8 +204,7 @@ const gameOver = () => {
     <!-- Game -->
     <div v-show="currentView === 'game'" class="border">
       <p>game</p>
-      <div>
-        {{ Math.floor(startTime / 60) }}:{{ startTime % 60 < 10 ? "0" : "" }}{{ startTime % 60 }} </div>
+      <div> {{ Math.floor(startTime / 60) }}:{{ startTime % 60 < 10 ? "0" : "" }}{{ startTime % 60 }} </div>
           <div>
             {{ Math.floor(time / 60) }}:{{ time % 60 < 10 ? "0" : "" }}{{ time % 60 }} </div>
               <div class="my-4 flex items-center gap-10">
@@ -217,7 +232,8 @@ const gameOver = () => {
                 <h1 class="text-7xl text-green-500" v-if="position === hole && isMole && !isHit" @click="clickObject()">
                   JuumMhoo
                 </h1>
-                <h1 class="text-7xl text-red-500" v-else-if="position === hole && !isMole && !isHit " @click="clickMiss()">
+                <h1 class="text-7xl text-red-500" v-else-if="position === hole && !isMole && !isHit"
+                  @click="clickMiss()">
                   Bomb
                 </h1>
                 <h1 class="text-7xl text-yellow-500" v-else>
@@ -225,11 +241,10 @@ const gameOver = () => {
                 </h1>
               </div>
               <button v-on:click="random(9)">hey</button>
-              <button @click="handleButtonClick('home')" class="py-1 px-3 bg-yellow-200 rounded-lg">
+              <button @click="handleButtonClick('home'), resetGame()" class="py-1 px-3 bg-yellow-200 rounded-lg">
                 Back
               </button>
           </div>
-
       </div>
 </template>
 
