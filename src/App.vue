@@ -42,7 +42,7 @@ const countDown = (duration, delay = 1000) => {
     time.value--
     if (time.value <= 0) {
       clearInterval(interval);
-      toggleModal("Time's up", `Your final score is ${score.value}`);
+      toggleModal("Time's up", `Your final score is ${Math.round(score.value)}`);
     }
   }, delay);
 };
