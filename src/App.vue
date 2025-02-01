@@ -6,8 +6,11 @@ const handleButtonClick = (view) => {
 };
 
 const position = ref(0);
+const isMole = ref(true)
+const isHit = ref(false)
 const random = (num) => {
   position.value = Math.floor(Math.random() * num) + 1
+  isMole.value = Math.random() < 0.7
 }
 
 const time = ref(0)
@@ -29,6 +32,7 @@ const gameCountDown = (func, duration, delay = 1500) => {
   let gameTime = Math.floor(duration * (1000 / delay))
   const interval = setInterval(() => {
     func()
+    isHit.value = false
     gameTime--
     if (gameTime <= 0) {
       clearInterval(interval)
@@ -42,6 +46,7 @@ const countDown = (duration, delay = 1000) => {
     time.value--
     if (time.value <= 0) {
       clearInterval(interval);
+      gameOver()
       toggleModal("Time's up", `Your final score is ${Math.round(score.value)}`);
     }
   }, delay);
@@ -75,6 +80,8 @@ const clickObject = () => {
   console.log("Cal bonus: +" + (1 * (1 + 0.1 * (combo.value - 1))));
 
   console.log("###############");
+
+  isHit.value = true
 }
 
 
@@ -130,6 +137,8 @@ const clickMiss = () => {
 
   console.log("HP -1 -> " + lifePoint.value.filter(Boolean).length);
   console.log("Life Point: " + lifePoint.value);
+
+  isHit.value = true
 
   // Life point = [false, false, false]
   if (!lifePoint.value.includes(true)) gameOver()
@@ -205,10 +214,13 @@ const gameOver = () => {
                 </div>
               </div>
               <div v-for="hole in 9" :key="hole">
-                <h1 class="text-7xl text-green-500" v-show="position === hole" @click="clickObject()">
+                <h1 class="text-7xl text-green-500" v-if="position === hole && isMole && !isHit" @click="clickObject()">
                   JuumMhoo
                 </h1>
-                <h1 class="text-7xl text-yellow-500" v-show="position !== hole">
+                <h1 class="text-7xl text-red-500" v-else-if="position === hole && !isMole && !isHit " @click="clickMiss()">
+                  Bomb
+                </h1>
+                <h1 class="text-7xl text-yellow-500" v-else>
                   MhooJuum
                 </h1>
               </div>
