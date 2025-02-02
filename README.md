@@ -3,7 +3,7 @@
 1. 66130500068 ภรพล จงสกุล [function score]
 2. 66130500076 วรินภร กิรติภัทรธนากร [function handleButtonClick, toggleModal]
 3. 66130500104 ภีมวัศ ช่วยดู [function random position, selectCharacter]
-4. 66130500123 ภูรินท์ สุวรรณรัตน์ [function timecount]
+4. 66130500123 ภูรินท์ สุวรรณรัตน์ [function countDown, gameStart]
 
 ## เกมตีตัวตุ่น
 ### feature
