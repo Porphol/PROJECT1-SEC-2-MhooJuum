@@ -41,13 +41,25 @@ const countDown = (duration, delay = 1000) => {
   time.value = duration;
   timeInterval = setInterval(() => {
     time.value--;
+    // Time's up
     if (time.value <= 0) {
       clearInterval(timeInterval);
       clearInterval(gameInterval);
-      gameOver();
+      gameStatus = false;
       toggleModal(
         "Time's up",
-        `Your final score is ${Math.round(score.value)}`
+        `Your final score is ${score.value}`
+      );
+    }
+    // Game over
+    // Life point = [false, false, false]
+    if (!lifePoint.value.includes(true)) {
+      clearInterval(timeInterval);
+      clearInterval(gameInterval);
+      gameStatus = false;
+      toggleModal(
+        "Game over",
+        `Your final score is ${score.value}`
       );
     }
   }, delay);
@@ -91,9 +103,9 @@ const clickObject = () => {
   console.log("Combo: " + combo.value);
 
   // add score
-  score.value += 1 * (1 + 0.1 * (combo.value - 1));
+  score.value += Math.round(1 * (1 + 0.1 * (combo.value - 1)));
   console.log("Score: " + score.value);
-  console.log("Cal bonus: +" + 1 * (1 + 0.1 * (combo.value - 1)));
+  console.log("Cal bonus: +" + Math.round(1 * (1 + 0.1 * (combo.value - 1))));
 
   console.log("###############");
 
@@ -102,11 +114,8 @@ const clickObject = () => {
 
 // Count combo
 const combo = ref(0);
-let lastClick = null;
-let countdownCombo = ref(0);
-const countCombo = () => {
-  const currentClick = Date.now();
-
+const countdownCombo = ref(0);
+const setCountdownCombo = () => {
   // Set countdown combo
   if (combo.value >= 15) {
     countdownCombo.value = 1;
@@ -115,27 +124,30 @@ const countCombo = () => {
   } else {
     countdownCombo.value = 5;
   }
-
-  // Add combo
-  if (lastClick === null || (currentClick - lastClick) / 1000 > countCombo) {
-    combo.value = 1;
-  } else {
-    if (combo.value < 20) combo.value++;
-  }
-  // Set new lastClick
-  lastClick = currentClick;
-  startCountdown();
+}
+const countCombo = () => {
+  setCountdownCombo()
+  if (combo.value < 20) combo.value++;
+  startCountdowncombo();
 };
 
 // Show countdown combo
 let countdownTimer = null;
-const startCountdown = () => {
+const startCountdowncombo = () => {
   clearInterval(countdownTimer);
   countdownTimer = setInterval(() => {
     countdownCombo.value--;
     if (countdownCombo.value <= 0) {
       clearInterval(countdownTimer);
-      combo.value = 0;
+
+      if (combo.value >= 15) {
+        combo.value = 10
+      } else {
+        combo.value = 0 
+      }
+      
+      setCountdownCombo()
+      startCountdowncombo();
     }
   }, 1000);
 };
@@ -153,18 +165,8 @@ const clickMiss = () => {
   console.log("Life Point: " + lifePoint.value);
 
   isHit.value = true;
-
-  // Life point = [false, false, false]
-  if (!lifePoint.value.includes(true)) gameOver();
 };
 
-// Game over
-const gameOver = () => {
-  gameStatus = false;
-
-  console.log("Game over");
-  console.log("Game status: " + gameStatus);
-};
 </script>
 
 <template>
@@ -235,7 +237,7 @@ const gameOver = () => {
 
         <!-- Score -->
         <div class="text-4xl font-bold text-yellow-500 flex items-center gap-2">
-          Score: <span class="text-5xl">{{ Math.round(score) }}</span>
+          Score: <span class="text-5xl">{{ score }}</span>
         </div>
 
         <!-- Combo -->
