@@ -1,146 +1,58 @@
 <script setup>
-import { ref } from "vue"
-const currentView = ref("home")
-const handleButtonClick = (view) => {
-  currentView.value = view;
-};
-
-const position = ref(0)
-const isMole = ref(true)
-const isHit = ref(false)
-const random = (num) => {
-  position.value = Math.floor(Math.random() * num) + 1
-  isMole.value = Math.random() < 0.7
-}
-
-const time = ref(0)
-const startTime = ref(0)
-let startInterval = null
-const gameStart = (duration) => {
-  startTime.value = 3
-  startInterval = setInterval(() => {
-    startTime.value--
-    if (startTime.value <= 0) {
-      clearInterval(startInterval)
-      gameCountDown(() => random(9))
-      countDown(duration)
-    }
-  }, 1000)
-}
-
-let gameInterval = null
-const gameCountDown = (func, delay = 1500) => {
-  gameInterval = setInterval(() => {
-    func()
-    isHit.value = false
-  }, delay)
-}
-
-let timeInterval = null
-const countDown = (duration, delay = 1000) => {
-  time.value = duration
-  timeInterval = setInterval(() => {
-    time.value--
-    if (time.value <= 0) {
-      clearInterval(timeInterval)
-      clearInterval(gameInterval)
-      gameOver()
-      toggleModal("Time's up", `Your final score is ${Math.round(score.value)}`)
-    }
-  }, delay)
-}
-
-const showModal = ref(false)
-const modalTitle = ref("")
-const modalMessage = ref("")
-const toggleModal = (title, message) => {
-  modalTitle.value = title
-  modalMessage.value = message
-  showModal.value = !showModal.value
-};
-
+import { ref, computed } from "vue"
 
 // Game controller
 let gameStatus = true
-const resetGame = () => {
-  gameStatus = true
-  score.value = 0
-  combo.value = 0
-  countdownCombo.value = 0
-  lifePoint.value = [true, true, true]
-  indexLifePoint = lifePoint.value.length - 1
-  time.value = 0
-  startTime.value = 0
-  position.value = 0
-  isHit.value = false
-  isMole.value = true
-  clearInterval(countdownTimer)
-  clearInterval(startInterval)
-  clearInterval(timeInterval)
-  clearInterval(gameInterval) 
-  
-}
-
 
 // Count score
 const score = ref(0)
 const clickObject = () => {
   if (!gameStatus) return
-  // add combo
-  countCombo()
-  console.log("Combo: " + combo.value)
-
-  // add score
-  score.value += (1 * (1 + 0.1 * (combo.value - 1)))
-  console.log("Score: " + score.value);
-  console.log("Cal bonus: +" + (1 * (1 + 0.1 * (combo.value - 1))));
-
-  console.log("###############")
-
-  isHit.value = true
+  setCountdownCombo()
+  if (combo.value < 20) combo.value++
+  startCountdownCombo()
 }
-
 
 // Count combo
 const combo = ref(0)
-let lastClick = null
-let countdownCombo = ref(0)
-const countCombo = () => {
-  const currentClick = Date.now()
+const countdownCombo = ref(5)
 
-  // Set countdown combo
+const setCountdownCombo = () => {
   if (combo.value >= 15) {
-    countdownCombo.value = 1
+    countdownCombo.value = 1.5
   } else if (combo.value >= 10) {
     countdownCombo.value = 3
   } else {
     countdownCombo.value = 5
   }
-
-  // Add combo 
-  if (lastClick === null || (currentClick - lastClick) / 1000 > countCombo) {
-    combo.value = 1
-  } else {
-    if (combo.value < 20) combo.value++
-  }
-  // Set new lastClick
-  lastClick = currentClick
-  startCountdown()
+  countdownMax = countdownCombo.value
 }
 
-// Show countdown combo
-let countdownTimer = null
-const startCountdown = () => {
+let countdownTimer = null;
+const startCountdownCombo = () => {
   clearInterval(countdownTimer)
+
   countdownTimer = setInterval(() => {
-    countdownCombo.value--
+    countdownCombo.value -= 0.1
     if (countdownCombo.value <= 0) {
       clearInterval(countdownTimer)
-      combo.value = 0
+      if (combo.value >= 15) {
+        combo.value = 10
+        setCountdownCombo()
+        startCountdownCombo()
+      } else {
+        combo.value = 0
+      }
     }
-  }, 1000)
+  }, 100)
 }
 
+// Circle countdown
+let countdownMax = 5 
+const circleCircumference = 2 * Math.PI * 40
+const strokeDashoffset = computed(() => {
+  return circleCircumference * (1 - (countdownCombo.value / countdownMax))
+});
 
 // Life point
 const lifePoint = ref([true, true, true])
@@ -151,101 +63,64 @@ const clickMiss = () => {
   indexLifePoint -= 1
   combo.value = 0
 
-  console.log("HP -1 -> " + lifePoint.value.filter(Boolean).length)
-  console.log("Life Point: " + lifePoint.value)
-
-  isHit.value = true
-
-  // Life point = [false, false, false]
-  if (!lifePoint.value.includes(true)) gameOver()
-}
-
-
-// Game over
-const gameOver = () => {
-  gameStatus = false
-
-  console.log("Game over")
-  console.log("Game status: " + gameStatus)
+  if (!lifePoint.value.includes(true)) gameStatus = false
 }
 </script>
 
 <template>
-  <!-- Home -->
-  <div class="w-full max-w-4xl">
-    <div v-show="currentView === 'home'" class="border">
-      <p>mhoojuum</p>
-      <button @click="handleButtonClick('game'), gameStart(10)" class="py-1 px-3 bg-yellow-200 rounded-lg">
-        PLAY
-      </button>
-      <br />
-      <button @click="
-        toggleModal(
-          'How to Play',
-          'Here are the instructions for how to play the game:'
-        )
-        " class="py-1 px-3 bg-yellow-200 rounded-lg">
-        HOW TO PLAY
-      </button>
-    </div>
+  <div class="ml-2 flex flex-col">
+    <!-- SCORE -->
+    <div>
+      <div class="my-4 flex items-center gap-10">
+        <p>Score: <span>{{ Math.round(score) }}</span></p>
+      </div>
 
-    <!-- Modal -->
-    <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center"
-      @click="toggleModal('', '')">
-      <div class="bg-white p-6 rounded-lg shadow-lg max-w-xl w-full" @click.stop>
-        <h2 class="text-3xl mb-4">{{ modalTitle }}</h2>
-        <p class="mb-4">{{ modalMessage }}</p>
-        <button @click="toggleModal('', '')" class="py-2 px-4 bg-yellow-500 rounded-lg text-white mt-4">
-          Close
-        </button>
+      <!-- bt Hit -->
+      <div @click="clickObject" class="border border-blue-600 bg-blue-400 px-3 py-1 text-white text-xl inline-block mt-3">
+        <p>Hit</p>
       </div>
     </div>
 
-    <!-- Game -->
-    <div v-show="currentView === 'game'" class="border">
-      <p>game</p>
-      <div> {{ Math.floor(startTime / 60) }}:{{ startTime % 60 < 10 ? "0" : "" }}{{ startTime % 60 }} </div>
-          <div>
-            {{ Math.floor(time / 60) }}:{{ time % 60 < 10 ? "0" : "" }}{{ time % 60 }} </div>
-              <div class="my-4 flex items-center gap-10">
-                <p>Score: <span>{{ Math.round(score) }}</span></p>
-                <p v-if="combo > 0">Combo: x<span>{{ combo }}</span></p>
-                <p v-if="combo > 0">Combo Time Left: <span>{{ countdownCombo }}</span></p>
-              </div>
-              <!-- LIFE -->
-              <div>
-                <div class="my-4">
-                  <div class="flex flex-row gap-5">
-                    <div v-for="hp in lifePoint">
-                      <p v-if="hp" class="broder rounded-full bg-green-600 p-1 text-xs">HP</p>
-                    </div>
-                  </div>
-                  <p v-if="!lifePoint.includes(true)" class="underline ">GAME OVER</p>
-                </div>
-                <!-- bt Miss -->
-                <div @click="clickMiss"
-                  class="border border-red-600 bg-red-400 px-3 py-1 text-white text-xl inline-block">
-                  <p>Miss</p>
-                </div>
-              </div>
-              <div v-for="hole in 9" :key="hole">
-                <h1 class="text-7xl text-green-500" v-if="position === hole && isMole && !isHit" @click="clickObject()">
-                  JuumMhoo
-                </h1>
-                <h1 class="text-7xl text-red-500" v-else-if="position === hole && !isMole && !isHit"
-                  @click="clickMiss()">
-                  Bomb
-                </h1>
-                <h1 class="text-7xl text-yellow-500" v-else>
-                  MhooJuum
-                </h1>
-              </div>
-              <button v-on:click="random(9)">hey</button>
-              <button @click="handleButtonClick('home'), resetGame()" class="py-1 px-3 bg-yellow-200 rounded-lg">
-                Back
-              </button>
+    <!-- LIFE -->
+    <div>
+      <div class="my-4">
+        <div class="flex flex-row gap-5">
+          <div v-for="hp in lifePoint">
+            <p v-if="hp" class="border rounded-full bg-green-600 p-1 text-xs">HP</p>
           </div>
+        </div>
+        <p v-if="!lifePoint.includes(true)" class="underline text-red-500">GAME OVER</p>
       </div>
+
+      <!-- bt Miss -->
+      <div @click="clickMiss" class="border border-red-600 bg-red-400 px-3 py-1 text-white text-xl inline-block">
+        <p>Miss</p>
+      </div>
+    </div>
+
+    <!-- TEST SHOW COMBO -->
+      <div v-if="combo > 0" class="relative w-32 h-32">
+        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+          <!-- Background circle -->
+          <circle class="text-gray-700" stroke-width="8" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50"/>
+          <!-- Countdown circle -->
+          <circle
+            class="text-yellow-400 transition-all duration-100"
+            stroke-width="8"
+            stroke="currentColor"
+            fill="transparent"
+            r="40"
+            cx="50"
+            cy="50"
+            :stroke-dasharray="circleCircumference"
+            :stroke-dashoffset="strokeDashoffset"
+          />
+        </svg>
+        <div class="absolute inset-0 flex items-center justify-center text-5xl font-bold">
+          X{{ combo }}
+        </div>
+      </div>
+  </div>  
 </template>
 
 <style scoped></style>
