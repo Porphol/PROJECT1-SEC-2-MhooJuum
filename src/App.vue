@@ -230,14 +230,8 @@ const clickMiss = () => {
     <!-- Game View -->
     <div
       v-show="currentView === 'game'"
-      class="absolute inset-0 flex flex-col items-center justify-start text-center"
-      style="
-        background-image: url('/bg-game.png');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        text-align: center;
-      "
+      class="absolute inset-0 flex flex-col items-center justify-start text-center bg-cover bg-center bg-no-repeat bg-bgGame"
+ 
     >
       <div
         class="flex justify-between items-center w-full px-8 py-4 bg-white bg-opacity-60 rounded-lg shadow-lg"
@@ -269,24 +263,24 @@ const clickMiss = () => {
         </div>
       </div>
 
-      <div class="grid grid-cols-3 gap-2 mt-56">
+      <div class="grid grid-cols-3 gap-2 mt-60">
         <div v-for="hole in 9" :key="hole">
           <div
             v-if="position === hole && isMole && !isHit"
             @click="clickObject()"
             class="flex justify-center hover:cursor-pointer"
           >
-            <img src="./assets/holeWithMole.png" class="w-1/2" />
+            <img src="./assets/holeWithMole.png" class="w-1/2 " />
           </div>
           <div
             v-else-if="position === hole && !isMole && !isHit"
             @click="clickMiss()"
             class="flex justify-center hover:cursor-pointer"
           >
-            <img src="./assets/bomb.png" class="w-1/2" />
+            <img src="./assets/bomb.png" class="w-1/2 " />
           </div>
           <div v-else class="flex justify-center">
-            <img src="./assets/hole.png" class="w-1/2" />
+            <img src="./assets/hole.png" class="w-1/2 " />
           </div>
         </div>
       </div>
