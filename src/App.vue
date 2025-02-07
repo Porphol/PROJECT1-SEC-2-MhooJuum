@@ -75,7 +75,7 @@ const resetGame = () => {
   gameStatus = true
   score.value = 0
   combo.value = 0
-  countdownCombo.value = 0
+  countdownCombo.value = 5
   lifePoint.value = [true, true, true]
   indexLifePoint = lifePoint.value.length - 1
   time.value = 0
@@ -96,6 +96,7 @@ const clickObject = () => {
   setCountdownCombo()
   if (combo.value < 20) combo.value++
   startCountdownCombo()
+  score.value += Math.round(1 * (1 + 0.1 * (combo.value - 1)))
 
   isHit.value = true
 }
@@ -175,7 +176,7 @@ const clickMiss = () => {
         <div class="flex flex-col items-center flex-grow">
           <img src="./assets/image/MhooJuum_logo.png" alt=""
             class="max-h-[20vh] w-auto absolute top-[46vh] left-1/2 transform -translate-x-1/2" />
-          <button @click="handleButtonClick('game'), gameStart(10)"
+          <button @click="handleButtonClick('game'), gameStart()"
             class="py-[2vh] px-[12vh] bg-yellow-300 rounded-[4rem] text-[12vh] font-Muffin tracking-widest duration-200 hover:bg-yellow-500 hover:text-white hover:shadow-xl">
             PLAY
           </button>
