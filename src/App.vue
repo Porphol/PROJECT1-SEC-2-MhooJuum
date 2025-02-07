@@ -196,15 +196,14 @@ const clickMiss = () => {
     </div>
 
     <!-- Game View -->
-    <div v-show="currentView === 'game'" class="absolute inset-0 flex flex-col items-center justify-start text-center"
-      style="
-        background-image: url('/bg-game.png');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        text-align: center;
-      ">
-      <div class="flex justify-between items-center w-full px-8 py-4 bg-white bg-opacity-60 rounded-lg shadow-lg">
+    <div
+      v-show="currentView === 'game'"
+      class="absolute inset-0 flex flex-col items-center justify-start text-center bg-cover bg-center bg-no-repeat bg-bgGame"
+ 
+    >
+      <div
+        class="flex justify-between items-center w-full px-8 py-4 bg-white bg-opacity-60 rounded-lg shadow-lg"
+      >
         <!-- Timer -->
         <div class="text-4xl font-bold text-gray-800">
           {{ Math.floor(time / 60) }}:{{ time % 60 < 10 ? "0" : "" }}{{ time % 60 }} 

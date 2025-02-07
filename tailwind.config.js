@@ -7,7 +7,8 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        "bgHome" : "url('src/assets/image/MhooJuum.png')"
+        "bgHome" : "url('src/assets/image/MhooJuum.png')",
+        "bgGame" : "url('src/assets/image/bg-game.png')",
       },
       fontFamily: {
         Muffin: ['Muffin']
