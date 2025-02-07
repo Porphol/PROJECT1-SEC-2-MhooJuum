@@ -176,7 +176,7 @@ const clickMiss = () => {
         <div class="flex flex-col items-center flex-grow">
           <img src="./assets/image/MhooJuum_logo.png" alt=""
             class="max-h-[20vh] w-auto absolute top-[46vh] left-1/2 transform -translate-x-1/2" />
-          <button @click="handleButtonClick('game'), gameStart()"
+          <button @click="handleButtonClick('game'), gameStart(10)"
             class="py-[2vh] px-[12vh] bg-yellow-300 rounded-[4rem] text-[12vh] font-Muffin tracking-widest duration-200 hover:bg-yellow-500 hover:text-white hover:shadow-xl">
             PLAY
           </button>
