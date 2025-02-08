@@ -1,6 +1,6 @@
 <script setup>
-import { ref, computed, watch } from "vue"
-const currentView = ref("home")
+import { ref, computed, watch } from 'vue'
+const currentView = ref('home')
 const handleButtonClick = (view) => {
   currentView.value = view
 }
@@ -18,8 +18,7 @@ watch(selectedCharacter, () => {
     holeImg.value = '/hole.png'
     bombImg.value = '/bomb.png'
     gameBg.value = '/bg-game.png'
-  }
-  else if (selectedCharacter.value === 'rat') {
+  } else if (selectedCharacter.value === 'rat') {
     logo.value = '/mouse.png'
     moleImg.value = '/holeWithMouse.png'
     holeImg.value = '/mouseHole.png'
@@ -71,22 +70,24 @@ const countDown = (duration, delay = 1000) => {
       clearInterval(timeInterval)
       clearInterval(gameInterval)
       gameStatus = false
-      toggleModal("Time's up", `Your final score is ${score.value}`)
+      updateHighScore()
+      toggleModal("Time's up", `Your high score is ${highScore.value} \n Your final score is ${score.value}`)
     }
     // Game over
     // Life point = [false, false, false]
     if (!lifePoint.value.includes(true)) {
       clearInterval(timeInterval)
       clearInterval(gameInterval)
+      updateHighScore()
       gameStatus = false
-      toggleModal("Game over", `Your final score is ${score.value}`)
+      toggleModal('Game over', `Your high score is ${highScore.value} \n Your final score is ${score.value}`)
     }
   }, delay)
 }
 
 const showModal = ref(false)
-const modalTitle = ref("")
-const modalMessage = ref("")
+const modalTitle = ref('')
+const modalMessage = ref('')
 const toggleModal = (title, message) => {
   modalTitle.value = title
   modalMessage.value = message
@@ -140,7 +141,7 @@ const setCountdownCombo = () => {
   countdownMax = countdownCombo.value
 }
 
-let countdownTimer = null;
+let countdownTimer = null
 const startCountdownCombo = () => {
   clearInterval(countdownTimer)
 
@@ -163,8 +164,8 @@ const startCountdownCombo = () => {
 let countdownMax = 5
 const circleCircumference = 2 * Math.PI * 40
 const strokeDashoffset = computed(() => {
-  return circleCircumference * (1 - (countdownCombo.value / countdownMax))
-});
+  return circleCircumference * (1 - countdownCombo.value / countdownMax)
+})
 
 // Life point
 const lifePoint = ref([true, true, true])
@@ -177,19 +178,36 @@ const clickMiss = () => {
 
   isHit.value = true
 }
+
+// High Score
+const highScore = ref(0)
+const updateHighScore = () => {
+  if (score.value > highScore.value) {
+    highScore.value = score.value;
+  }
+};
+
 </script>
 
 <template>
   <div>
     <!-- Div Home Page -->
-    <div v-show="currentView === 'home'" class="border h-screen bg-cover bg-no-repeat bg-center bg-bgHome">
+    <div
+      v-show="currentView === 'home'"
+      class="border h-screen bg-cover bg-no-repeat bg-center bg-bgHome"
+    >
       <div class="absolute right-0 mr-10 mt-10">
-        <button @click="
-          toggleModal(
-            'How to Play',
-            'Here are the instructions for how to play the game:'
-          )
-          " class="pt-1 pb-2 px-5 bg-black rounded-[50%] font-bold text-white text-6xl">
+        <button
+          @click="
+            toggleModal(
+              'How to Play',
+              `- Select your favorite character before starting the game.
+             - Click the character to score points.
+             - Avoid clicking bombs to save your lives.`
+            )
+          "
+          class="pt-1 pb-2 px-5 bg-black rounded-[50%] font-bold text-white text-6xl"
+        >
           ?
         </button>
       </div>
@@ -197,25 +215,52 @@ const clickMiss = () => {
         <p class="text-center text-[180px] font-Muffin tracking-wider pt-6">
           MHOOJUUM
         </p>
-        <div class="absolute top-[70%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
-          <img :src="logo" alt=""
-            class="max-h-[200px] w-auto absolute -top-[9.5rem] left-1/2 transform -translate-x-1/2" />
-          <button @click="handleButtonClick('game'), gameStart(10)"
-            class="py-2 px-14 bg-yellow-300 rounded-[4rem] text-[8rem] font-Muffin tracking-widest duration-200 hover:bg-yellow-500 hover:text-white hover:shadow-xl">
+        <div
+          class="absolute top-[70%] left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+        >
+          <img
+            :src="logo"
+            alt=""
+            class="max-h-[200px] w-auto absolute -top-[9.5rem] left-1/2 transform -translate-x-1/2"
+          />
+          <button
+            @click="handleButtonClick('game'), gameStart(10)"
+            class="py-2 px-14 bg-yellow-300 rounded-[4rem] text-[8rem] font-Muffin tracking-widest duration-200 hover:bg-yellow-500 hover:text-white hover:shadow-xl"
+          >
             PLAY
           </button>
           <div class="flex gap-8">
             <label
               class="rounded-[4rem] px-4 py-2 flex items-center gap-2 cursor-pointer transition hover:bg-yellow-400"
-              :class="selectedCharacter === 'mole' ? 'bg-yellow-500 text-white' : 'bg-yellow-300'">
-              <input type="radio" value="mole" v-model="selectedCharacter" class="hidden">
+              :class="
+                selectedCharacter === 'mole'
+                  ? 'bg-yellow-500 text-white'
+                  : 'bg-yellow-300'
+              "
+            >
+              <input
+                type="radio"
+                value="mole"
+                v-model="selectedCharacter"
+                class="hidden"
+              />
               <span>Mole</span>
             </label>
 
             <label
               class="rounded-[4rem] px-4 py-2 flex items-center gap-2 cursor-pointer transition hover:bg-yellow-400"
-              :class="selectedCharacter === 'rat' ? 'bg-yellow-500 text-white' : 'bg-yellow-300'">
-              <input type="radio" value="rat" v-model="selectedCharacter" class="hidden">
+              :class="
+                selectedCharacter === 'rat'
+                  ? 'bg-yellow-500 text-white'
+                  : 'bg-yellow-300'
+              "
+            >
+              <input
+                type="radio"
+                value="rat"
+                v-model="selectedCharacter"
+                class="hidden"
+              />
               <span>Rat</span>
             </label>
           </div>
@@ -224,75 +269,124 @@ const clickMiss = () => {
     </div>
 
     <!-- Modal -->
-    <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-      <div class="bg-white p-6 rounded-lg shadow-lg max-w-xl w-full" @click.stop>
+    <div
+      v-if="showModal"
+      class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50"
+    >
+      <div
+        class="bg-white p-6 rounded-lg shadow-lg max-w-xl w-full"
+        @click.stop
+      >
         <h2 class="text-2xl sm:text-3xl mb-4">{{ modalTitle }}</h2>
-        <p class="mb-4">{{ modalMessage }}</p>
-        <button @click="toggleModal('', '')" class="py-2 px-4 bg-yellow-500 rounded-lg text-white mt-4">
+        <p class="mb-2 text-lg leading-8 whitespace-pre-line">{{ modalMessage }}</p>
+        <button
+          @click="toggleModal('', '')"
+          class="py-2 px-4 bg-yellow-500 rounded-lg text-white mt-4"
+        >
           Close
         </button>
       </div>
     </div>
 
     <!-- Game View -->
-    <div v-show="currentView === 'game'"
+    <div
+      v-show="currentView === 'game'"
       class="absolute inset-0 flex flex-col items-center justify-start text-center bg-cover bg-center bg-no-repeat"
-      :style="{ backgroundImage: `url(${gameBg})` }">
-      <div class="flex justify-between items-center w-full px-8 py-4 bg-white bg-opacity-60 rounded-lg shadow-lg">
+      :style="{ backgroundImage: `url(${gameBg})` }"
+    >
+      <div
+        class="flex justify-between items-center w-full px-8 py-4 bg-white bg-opacity-60 rounded-lg shadow-lg"
+      >
         <!-- Timer -->
         <div class="text-4xl font-bold text-gray-800">
-          {{ Math.floor(time / 60) }}:{{ time % 60 < 10 ? "0" : "" }}{{ time % 60 }} </div>
-
-            <!-- Score -->
-            <div class="text-4xl font-bold text-yellow-500 flex items-center gap-2">
-              Score: <span class="text-5xl">{{ score }}</span>
-            </div>
-            <!-- Life Points -->
-            <div class="flex flex-row gap-5">
-              <div v-for="hp in lifePoint">
-                <img src="./assets/life.png" v-if="hp" class="w-12" />
-              </div>
-            </div>
+          {{ Math.floor(time / 60) }}:{{ time % 60 < 10 ? '0' : ''
+          }}{{ time % 60 }}
         </div>
-        <!-- combo -->
 
-        <div class="h-32 self-end mt-8 mr-8">
-          <div v-if="combo > 0" class="relative w-32 h-full">
-            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-              <!-- Background circle -->
-              <circle class="text-gray-700" stroke-width="8" stroke="currentColor" fill="transparent" r="40" cx="50"
-                cy="50" />
-              <!-- Countdown circle -->
-              <circle class="text-yellow-400 transition-all duration-100" stroke-width="8" stroke="currentColor"
-                fill="transparent" r="40" cx="50" cy="50" :stroke-dasharray="circleCircumference"
-                :stroke-dashoffset="strokeDashoffset" />
-            </svg>
-            <div class="absolute inset-0 flex items-center justify-center text-5xl font-bold">
-              X{{ combo }}
-            </div>
+        <!-- High Score -->
+        <div class="text-4xl font-bold text-gray-800">
+          High score: <span class="text-5xl">{{ highScore }}</span>
+        </div>
+
+        <!-- Score -->
+        <div class="text-4xl font-bold text-yellow-500 flex items-center gap-2">
+          Score: <span class="text-5xl">{{ score }}</span>
+        </div>
+        <!-- Life Points -->
+        <div class="flex flex-row gap-5">
+          <div v-for="hp in lifePoint">
+            <img src="./assets/life.png" v-if="hp" class="w-12" />
           </div>
         </div>
-
-        <div class="grid grid-cols-3 gap-2 mt-20">
-          <div v-for="hole in 9" :key="hole">
-            <div v-show="position === hole && isMole && !isHit" @click="clickObject()"
-              class="flex justify-center hover:cursor-pointer">
-              <img :src="moleImg" class="w-1/2" />
-            </div>
-            <div v-show="position === hole && !isMole && !isHit" @click="clickMiss()"
-              class="flex justify-center hover:cursor-pointer">
-              <img :src="bombImg" class="w-1/2" />
-            </div>
-            <div v-show="!(position === hole && !isHit)" class="flex justify-center">
-              <img :src="holeImg" class="w-1/2" />
-            </div>
-          </div>
-        </div>
-        <button @click="handleButtonClick('home'), resetGame()" class="py-1 px-3 bg-yellow-200 rounded-lg">
-          Back
-        </button>
       </div>
+      <!-- combo -->
+
+      <div class="h-32 self-end mt-8 mr-8">
+        <div v-if="combo > 0" class="relative w-32 h-full">
+          <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+            <!-- Background circle -->
+            <circle
+              class="text-gray-700"
+              stroke-width="8"
+              stroke="currentColor"
+              fill="transparent"
+              r="40"
+              cx="50"
+              cy="50"
+            />
+            <!-- Countdown circle -->
+            <circle
+              class="text-yellow-400 transition-all duration-100"
+              stroke-width="8"
+              stroke="currentColor"
+              fill="transparent"
+              r="40"
+              cx="50"
+              cy="50"
+              :stroke-dasharray="circleCircumference"
+              :stroke-dashoffset="strokeDashoffset"
+            />
+          </svg>
+          <div
+            class="absolute inset-0 flex items-center justify-center text-5xl font-bold"
+          >
+            X{{ combo }}
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2 mt-20">
+        <div v-for="hole in 9" :key="hole">
+          <div
+            v-show="position === hole && isMole && !isHit"
+            @click="clickObject()"
+            class="flex justify-center hover:cursor-pointer"
+          >
+            <img :src="moleImg" class="w-1/2" />
+          </div>
+          <div
+            v-show="position === hole && !isMole && !isHit"
+            @click="clickMiss()"
+            class="flex justify-center hover:cursor-pointer"
+          >
+            <img :src="bombImg" class="w-1/2" />
+          </div>
+          <div
+            v-show="!(position === hole && !isHit)"
+            class="flex justify-center"
+          >
+            <img :src="holeImg" class="w-1/2" />
+          </div>
+        </div>
+      </div>
+      <button
+        @click="handleButtonClick('home'), resetGame()"
+        class="py-1 px-3 bg-yellow-200 rounded-lg"
+      >
+        Back
+      </button>
     </div>
+  </div>
 </template>
 
 <style scoped></style>
