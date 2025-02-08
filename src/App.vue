@@ -9,7 +9,7 @@ const logo = ref('/MhooJuum_logo.png')
 const moleImg = ref('/holeWithMole.png')
 const holeImg = ref('/hole.png')
 const bombImg = ref('/bomb.png')
-const gameBg = ref('bgGame')
+const gameBg = ref('/bg-game.png')
 const selectedCharacter = ref('mole')
 watch(selectedCharacter, () => {
   if (selectedCharacter.value === 'mole') {
@@ -17,14 +17,14 @@ watch(selectedCharacter, () => {
     moleImg.value = '/holeWithMole.png'
     holeImg.value = '/hole.png'
     bombImg.value = '/bomb.png'
-    gameBg.value = 'bgGame'
+    gameBg.value = '/bg-game.png'
   }
   else if (selectedCharacter.value === 'rat') {
     logo.value = '/mouse.png'
     moleImg.value = '/holeWithMouse.png'
     holeImg.value = '/mouseHole.png'
     bombImg.value = '/angryCat.png'
-    gameBg.value = 'bgHouse'
+    gameBg.value = '/bgHouse.png'
     console.log(gameBg.value)
   }
 })
@@ -193,25 +193,27 @@ const clickMiss = () => {
           ?
         </button>
       </div>
-      <div class="flex justify-center items-center flex-col mt-[5rem] gap-[10rem] h-max">
-        <p class="text-center text-[13.5rem] font-Muffin tracking-wider flex-grow">
+      <div>
+        <p class="text-center text-[180px] font-Muffin tracking-wider pt-6">
           MHOOJUUM
         </p>
-        <div class="flex flex-col items-center flex-grow">
+        <div class="absolute top-[70%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
           <img :src="logo" alt=""
-            class="max-h-[20vh] w-auto absolute top-[46vh] left-1/2 transform -translate-x-1/2" />
+            class="max-h-[200px] w-auto absolute -top-[9.5rem] left-1/2 transform -translate-x-1/2" />
           <button @click="handleButtonClick('game'), gameStart(10)"
-            class="py-[2vh] px-[12vh] bg-yellow-300 rounded-[4rem] text-[12vh] font-Muffin tracking-widest duration-200 hover:bg-yellow-500 hover:text-white hover:shadow-xl">
+            class="py-2 px-14 bg-yellow-300 rounded-[4rem] text-[8rem] font-Muffin tracking-widest duration-200 hover:bg-yellow-500 hover:text-white hover:shadow-xl">
             PLAY
           </button>
           <div class="flex gap-8">
-            <label class="rounded-[4rem] px-4 py-2 flex items-center gap-2 cursor-pointer transition hover:bg-yellow-400"
+            <label
+              class="rounded-[4rem] px-4 py-2 flex items-center gap-2 cursor-pointer transition hover:bg-yellow-400"
               :class="selectedCharacter === 'mole' ? 'bg-yellow-500 text-white' : 'bg-yellow-300'">
               <input type="radio" value="mole" v-model="selectedCharacter" class="hidden">
               <span>Mole</span>
             </label>
 
-            <label class="rounded-[4rem] px-4 py-2 flex items-center gap-2 cursor-pointer transition hover:bg-yellow-400"
+            <label
+              class="rounded-[4rem] px-4 py-2 flex items-center gap-2 cursor-pointer transition hover:bg-yellow-400"
               :class="selectedCharacter === 'rat' ? 'bg-yellow-500 text-white' : 'bg-yellow-300'">
               <input type="radio" value="rat" v-model="selectedCharacter" class="hidden">
               <span>Rat</span>
@@ -235,7 +237,7 @@ const clickMiss = () => {
     <!-- Game View -->
     <div v-show="currentView === 'game'"
       class="absolute inset-0 flex flex-col items-center justify-start text-center bg-cover bg-center bg-no-repeat"
-      :class="`bg-${gameBg}`">
+      :style="{ backgroundImage: `url(${gameBg})` }">
       <div class="flex justify-between items-center w-full px-8 py-4 bg-white bg-opacity-60 rounded-lg shadow-lg">
         <!-- Timer -->
         <div class="text-4xl font-bold text-gray-800">
