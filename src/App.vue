@@ -1,9 +1,33 @@
 <script setup>
-import { ref, computed } from "vue"
+import { ref, computed, watch } from "vue"
 const currentView = ref("home")
 const handleButtonClick = (view) => {
   currentView.value = view
 }
+
+const logo = ref('/MhooJuum_logo.png')
+const moleImg = ref('/holeWithMole.png')
+const holeImg = ref('/hole.png')
+const bombImg = ref('/bomb.png')
+const gameBg = ref('bgGame')
+const selectedCharacter = ref('mole')
+watch(selectedCharacter, () => {
+  if (selectedCharacter.value === 'mole') {
+    logo.value = '/MhooJuum_logo.png'
+    moleImg.value = '/holeWithMole.png'
+    holeImg.value = '/hole.png'
+    bombImg.value = '/bomb.png'
+    gameBg.value = 'bgGame'
+  }
+  else if (selectedCharacter.value === 'rat') {
+    logo.value = '/mouse.png'
+    moleImg.value = '/holeWithMouse.png'
+    holeImg.value = '/mouseHole.png'
+    bombImg.value = '/angryCat.png'
+    gameBg.value = 'bgHouse'
+    console.log(gameBg.value)
+  }
+})
 
 const position = ref(0)
 const isMole = ref(true)
@@ -174,12 +198,25 @@ const clickMiss = () => {
           MHOOJUUM
         </p>
         <div class="flex flex-col items-center flex-grow">
-          <img src="./assets/image/MhooJuum_logo.png" alt=""
+          <img :src="logo" alt=""
             class="max-h-[20vh] w-auto absolute top-[46vh] left-1/2 transform -translate-x-1/2" />
           <button @click="handleButtonClick('game'), gameStart(10)"
             class="py-[2vh] px-[12vh] bg-yellow-300 rounded-[4rem] text-[12vh] font-Muffin tracking-widest duration-200 hover:bg-yellow-500 hover:text-white hover:shadow-xl">
             PLAY
           </button>
+          <div class="flex gap-8">
+            <label class="rounded-[4rem] px-4 py-2 flex items-center gap-2 cursor-pointer transition hover:bg-yellow-400"
+              :class="selectedCharacter === 'mole' ? 'bg-yellow-500 text-white' : 'bg-yellow-300'">
+              <input type="radio" value="mole" v-model="selectedCharacter" class="hidden">
+              <span>Mole</span>
+            </label>
+
+            <label class="rounded-[4rem] px-4 py-2 flex items-center gap-2 cursor-pointer transition hover:bg-yellow-400"
+              :class="selectedCharacter === 'rat' ? 'bg-yellow-500 text-white' : 'bg-yellow-300'">
+              <input type="radio" value="rat" v-model="selectedCharacter" class="hidden">
+              <span>Rat</span>
+            </label>
+          </div>
         </div>
       </div>
     </div>
@@ -196,30 +233,25 @@ const clickMiss = () => {
     </div>
 
     <!-- Game View -->
-    <div
-      v-show="currentView === 'game'"
-      class="absolute inset-0 flex flex-col items-center justify-start text-center bg-cover bg-center bg-no-repeat bg-bgGame"
- 
-    >
-      <div
-        class="flex justify-between items-center w-full px-8 py-4 bg-white bg-opacity-60 rounded-lg shadow-lg"
-      >
+    <div v-show="currentView === 'game'"
+      class="absolute inset-0 flex flex-col items-center justify-start text-center bg-cover bg-center bg-no-repeat"
+      :class="`bg-${gameBg}`">
+      <div class="flex justify-between items-center w-full px-8 py-4 bg-white bg-opacity-60 rounded-lg shadow-lg">
         <!-- Timer -->
         <div class="text-4xl font-bold text-gray-800">
-          {{ Math.floor(time / 60) }}:{{ time % 60 < 10 ? "0" : "" }}{{ time % 60 }} 
-        </div>
+          {{ Math.floor(time / 60) }}:{{ time % 60 < 10 ? "0" : "" }}{{ time % 60 }} </div>
 
-        <!-- Score -->
-        <div class="text-4xl font-bold text-yellow-500 flex items-center gap-2">
-          Score: <span class="text-5xl">{{ score }}</span>
+            <!-- Score -->
+            <div class="text-4xl font-bold text-yellow-500 flex items-center gap-2">
+              Score: <span class="text-5xl">{{ score }}</span>
+            </div>
+            <!-- Life Points -->
+            <div class="flex flex-row gap-5">
+              <div v-for="hp in lifePoint">
+                <img src="./assets/life.png" v-if="hp" class="w-12" />
+              </div>
+            </div>
         </div>
-        <!-- Life Points -->
-        <div class="flex flex-row gap-5">
-          <div v-for="hp in lifePoint">
-            <img src="./assets/life.png" v-if="hp" class="w-12" />
-          </div>
-        </div>
-      </div>
         <!-- combo -->
 
         <div class="h-32 self-end mt-8 mr-8">
@@ -238,19 +270,19 @@ const clickMiss = () => {
             </div>
           </div>
         </div>
-        
+
         <div class="grid grid-cols-3 gap-2 mt-20">
           <div v-for="hole in 9" :key="hole">
-            <div v-if="position === hole && isMole && !isHit" @click="clickObject()"
+            <div v-show="position === hole && isMole && !isHit" @click="clickObject()"
               class="flex justify-center hover:cursor-pointer">
-              <img src="./assets/holeWithMole.png" class="w-1/2" />
+              <img :src="moleImg" class="w-1/2" />
             </div>
-            <div v-else-if="position === hole && !isMole && !isHit" @click="clickMiss()"
+            <div v-show="position === hole && !isMole && !isHit" @click="clickMiss()"
               class="flex justify-center hover:cursor-pointer">
-              <img src="./assets/bomb.png" class="w-1/2" />
+              <img :src="bombImg" class="w-1/2" />
             </div>
-            <div v-else class="flex justify-center">
-              <img src="./assets/hole.png" class="w-1/2" />
+            <div v-show="!(position === hole && !isHit)" class="flex justify-center">
+              <img :src="holeImg" class="w-1/2" />
             </div>
           </div>
         </div>
