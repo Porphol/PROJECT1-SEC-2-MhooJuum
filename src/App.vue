@@ -71,7 +71,10 @@ const countDown = (duration, delay = 1000) => {
       clearInterval(gameInterval)
       gameStatus = false
       updateHighScore()
-      toggleModal("Time's up", `Your high score is ${highScore.value} \n Your final score is ${score.value}`)
+      toggleModal(
+        "Time's up",
+        `Your high score is ${highScore.value} \n Your final score is ${score.value}`
+      )
     }
     // Game over
     // Life point = [false, false, false]
@@ -80,7 +83,10 @@ const countDown = (duration, delay = 1000) => {
       clearInterval(gameInterval)
       updateHighScore()
       gameStatus = false
-      toggleModal('Game over', `Your high score is ${highScore.value} \n Your final score is ${score.value}`)
+      toggleModal(
+        'Game over',
+        `Your high score is ${highScore.value} \n Your final score is ${score.value}`
+      )
     }
   }, delay)
 }
@@ -122,7 +128,6 @@ const clickObject = () => {
   if (combo.value < 20) combo.value++
   startCountdownCombo()
   score.value += Math.round(1 * (1 + 0.1 * (combo.value - 1)))
-
   isHit.value = true
 }
 
@@ -183,14 +188,30 @@ const clickMiss = () => {
 const highScore = ref(0)
 const updateHighScore = () => {
   if (score.value > highScore.value) {
-    highScore.value = score.value;
+    highScore.value = score.value
   }
-};
+}
 
+const soundOn = ref(false)
+const playSound = () => {
+  soundOn.value = !soundOn.value
+}
+
+// playSoundEffect
+const correctSoundPlayer = ref('')
+const wrongSoundPlayer = ref('')
+
+const playSoundEffect = (sound) => {
+  if (sound === 'correct' && soundOn.value) {
+    correctSoundPlayer.value.play()
+  } else if (sound === 'wrong' && soundOn.value) {
+    wrongSoundPlayer.value.play()
+  }
+}
 </script>
 
 <template>
-  <div>
+  <div class="font-Muffin text-black">
     <!-- Div Home Page -->
     <div
       v-show="currentView === 'home'"
@@ -212,7 +233,7 @@ const updateHighScore = () => {
         </button>
       </div>
       <div>
-        <p class="text-center text-[180px] font-Muffin tracking-wider pt-6">
+        <p class="text-center text-[180px] tracking-wider pt-6">
           MHOOJUUM
         </p>
         <div
@@ -225,7 +246,7 @@ const updateHighScore = () => {
           />
           <button
             @click="handleButtonClick('game'), gameStart(10)"
-            class="py-2 px-14 bg-yellow-300 rounded-[4rem] text-[8rem] font-Muffin tracking-widest duration-200 hover:bg-yellow-500 hover:text-white hover:shadow-xl"
+            class="py-2 px-14 bg-yellow-300 rounded-[4rem] text-[8rem] tracking-widest duration-200 hover:bg-yellow-500 hover:text-white hover:shadow-xl"
           >
             PLAY
           </button>
@@ -278,7 +299,9 @@ const updateHighScore = () => {
         @click.stop
       >
         <h2 class="text-2xl sm:text-3xl mb-4">{{ modalTitle }}</h2>
-        <p class="mb-2 text-lg leading-8 whitespace-pre-line">{{ modalMessage }}</p>
+        <p class="mb-2 text-lg leading-8 whitespace-pre-line">
+          {{ modalMessage }}
+        </p>
         <button
           @click="toggleModal('', '')"
           class="py-2 px-4 bg-yellow-500 rounded-lg text-white mt-4"
@@ -294,6 +317,15 @@ const updateHighScore = () => {
       class="absolute inset-0 flex flex-col items-center justify-start text-center bg-cover bg-center bg-no-repeat"
       :style="{ backgroundImage: `url(${gameBg})` }"
     >
+      <!-- sound effect -->
+      <audio ref="correctSoundPlayer">
+        <source src="./assets/sound/correct.mp3" type="audio/mp3" />
+      </audio>
+
+      <audio ref="wrongSoundPlayer">
+        <source src="./assets/sound/wrong.mp3" type="audio/mp3" />
+      </audio>
+
       <div
         class="flex justify-between items-center w-full px-8 py-4 bg-white bg-opacity-60 rounded-lg shadow-lg"
       >
@@ -318,6 +350,36 @@ const updateHighScore = () => {
             <img src="./assets/life.png" v-if="hp" class="w-12" />
           </div>
         </div>
+
+        <!-- sound -->
+        <label class="swap">
+          <input type="checkbox" @click="playSound" v-model="soundOn" />
+          <!-- volume on icon -->
+          <svg
+            class="swap-on fill-current"
+            xmlns="http://www.w3.org/2000/svg"
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z"
+            />
+          </svg>
+
+          <!-- volume off icon -->
+          <svg
+            class="swap-off fill-current"
+            xmlns="http://www.w3.org/2000/svg"
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M3,9H7L12,4V20L7,15H3V9M16.59,12L14,9.41L15.41,8L18,10.59L20.59,8L22,9.41L19.41,12L22,14.59L20.59,16L18,13.41L15.41,16L14,14.59L16.59,12Z"
+            />
+          </svg>
+        </label>
       </div>
       <!-- combo -->
 
@@ -359,14 +421,14 @@ const updateHighScore = () => {
         <div v-for="hole in 9" :key="hole">
           <div
             v-show="position === hole && isMole && !isHit"
-            @click="clickObject()"
+            @click="clickObject(), playSoundEffect('correct')"
             class="flex justify-center hover:cursor-pointer"
           >
             <img :src="moleImg" class="w-1/2" />
           </div>
           <div
             v-show="position === hole && !isMole && !isHit"
-            @click="clickMiss()"
+            @click="clickMiss(), playSoundEffect('wrong')"
             class="flex justify-center hover:cursor-pointer"
           >
             <img :src="bombImg" class="w-1/2" />
