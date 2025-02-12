@@ -24,7 +24,12 @@ watch(selectedCharacter, () => {
     holeImg.value = '/mouseHole.png'
     bombImg.value = '/angryCat.png'
     gameBg.value = '/bgHouse.png'
-    console.log(gameBg.value)
+  } else if (selectedCharacter.value === 'mhoojuum') {
+    logo.value = '/Porkมั.png'
+    moleImg.value = '/hotpotWithBoiledPork.png'
+    holeImg.value = '/hotpot.png'
+    bombImg.value = '/hotpotWithRawPork.png'
+    gameBg.value = '/bg-mhoojuum.png'
   }
 })
 
@@ -283,6 +288,23 @@ const playSoundEffect = (sound) => {
                 class="hidden"
               />
               <span>Rat</span>
+            </label>
+
+            <label
+              class="rounded-[4rem] px-4 py-2 flex items-center gap-2 cursor-pointer transition hover:bg-yellow-400"
+              :class="
+                selectedCharacter === 'mhoojuum'
+                  ? 'bg-yellow-500 text-white'
+                  : 'bg-yellow-300'
+              "
+            >
+              <input
+                type="radio"
+                value="mhoojuum"
+                v-model="selectedCharacter"
+                class="hidden"
+              />
+              <span>MhooJuum</span>
             </label>
           </div>
         </div>
