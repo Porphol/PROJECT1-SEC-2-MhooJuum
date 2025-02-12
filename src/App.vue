@@ -134,6 +134,7 @@ const clickObject = () => {
   startCountdownCombo()
   score.value += Math.round(1 * (1 + 0.1 * (combo.value - 1)))
   isHit.value = true
+  playSoundEffect('correct')
 }
 
 // Count combo
@@ -185,8 +186,8 @@ const clickMiss = () => {
   lifePoint.value[indexLifePoint] = false
   indexLifePoint -= 1
   combo.value = 0
-
   isHit.value = true
+  playSoundEffect('wrong')
 }
 
 // High Score
@@ -197,7 +198,7 @@ const updateHighScore = () => {
   }
 }
 
-const soundOn = ref(false)
+const soundOn = ref(true)
 const playSound = () => {
   soundOn.value = !soundOn.value
 }
@@ -452,14 +453,14 @@ const playSoundEffect = (sound) => {
         <div v-for="hole in 9" :key="hole">
           <div
             v-show="position === hole && isMole && !isHit"
-            @click="clickObject(), playSoundEffect('correct')"
+            @click="clickObject()"
             class="flex justify-center hover:cursor-pointer"
           >
             <img :src="moleImg" class="w-1/2" />
           </div>
           <div
             v-show="position === hole && !isMole && !isHit"
-            @click="clickMiss(), playSoundEffect('wrong')"
+            @click="clickMiss()"
             class="flex justify-center hover:cursor-pointer"
           >
             <img :src="bombImg" class="w-1/2" />
