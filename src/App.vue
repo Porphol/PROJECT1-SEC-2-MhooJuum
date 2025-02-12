@@ -204,8 +204,10 @@ const wrongSoundPlayer = ref('')
 const playSoundEffect = (sound) => {
   if (sound === 'correct' && soundOn.value) {
     correctSoundPlayer.value.play()
+    correctSoundPlayer.value.volume = 0.1
   } else if (sound === 'wrong' && soundOn.value) {
     wrongSoundPlayer.value.play()
+    wrongSoundPlayer.value.volume = 0.1
   }
 }
 </script>
