@@ -25,7 +25,7 @@ watch(selectedCharacter, () => {
     bombImg.value = '/angryCat.png'
     gameBg.value = '/bgHouse.png'
   } else if (selectedCharacter.value === 'mhoojuum') {
-    logo.value = '/Porkมั.png'
+    logo.value = '/Pork.png'
     moleImg.value = '/hotpotWithBoiledPork.png'
     holeImg.value = '/hotpot.png'
     bombImg.value = '/hotpotWithRawPork.png'
