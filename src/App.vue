@@ -319,6 +319,13 @@ const playSoundEffect = (sound) => {
       class="absolute inset-0 flex flex-col items-center justify-start text-center bg-cover bg-center bg-no-repeat"
       :style="{ backgroundImage: `url(${gameBg})` }"
     >
+      <!-- countDown before start -->
+      <div
+        v-if="startTime > 0"
+        class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 text-[180px] text-white"
+      >
+        {{ startTime }}
+      </div>
       <!-- sound effect -->
       <audio ref="correctSoundPlayer">
         <source src="./assets/sound/correct.mp3" type="audio/mp3" />
