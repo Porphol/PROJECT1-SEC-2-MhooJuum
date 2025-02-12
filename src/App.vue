@@ -443,6 +443,7 @@ const playSoundEffect = (sound) => {
           </svg>
           <div
             class="absolute inset-0 flex items-center justify-center text-5xl font-bold"
+            :class="selectedCharacter === 'mhoojuum' ? 'text-white' : 'text-black'"
           >
             X{{ combo }}
           </div>
