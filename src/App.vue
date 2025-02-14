@@ -45,6 +45,7 @@ const time = ref(0)
 const startTime = ref(0)
 let startInterval = null
 const gameStart = (duration) => {
+  resetGame()
   startTime.value = 3
   startInterval = setInterval(() => {
     startTime.value--
@@ -324,7 +325,7 @@ const playSoundEffect = (sound) => {
         @click.stop
       >
         <h2 class="text-2xl sm:text-3xl md:text-3xl mb-4 text-center">{{ modalTitle }}</h2>
-        <p class="mb-2 text-lg sm:text-lg md:text-xl leading-8 whitespace-pre-line">
+        <p class="my-8 text-lg sm:text-lg md:text-xl leading-8 whitespace-pre-line">
           {{ modalMessage }}
         </p>
         <button
@@ -414,39 +415,40 @@ const playSoundEffect = (sound) => {
           </svg>
         </label>
       </div>
-      <!-- combo -->
-
-      <div class="h-32 self-end mt-8 mr-8">
-        <div v-if="combo > 0" class="relative w-32 h-full">
-          <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-            <!-- Background circle -->
-            <circle
-              class="text-gray-700"
-              stroke-width="8"
-              stroke="currentColor"
-              fill="transparent"
-              r="40"
-              cx="50"
-              cy="50"
-            />
-            <!-- Countdown circle -->
-            <circle
-              class="text-yellow-400 transition-all duration-100"
-              stroke-width="8"
-              stroke="currentColor"
-              fill="transparent"
-              r="40"
-              cx="50"
-              cy="50"
-              :stroke-dasharray="circleCircumference"
-              :stroke-dashoffset="strokeDashoffset"
-            />
-          </svg>
-          <div
-            class="absolute inset-0 flex items-center justify-center text-5xl font-bold"
-            :class="selectedCharacter === 'mhoojuum' ? 'text-white' : 'text-black'"
-          >
-            X{{ combo }}
+      <div class="w-full flex justify-between mt-8 px-16" :class="selectedCharacter === 'mhoojuum' ? 'text-white' : 'text-black'">
+        <button @click="changePage('home'), resetGame()" class="text-6xl">BACK</button>
+        <!-- combo -->
+        <div class="h-32">
+          <div v-if="combo > 0" class="relative w-32 h-full" >
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+              <!-- Background circle -->
+              <circle
+                class="text-gray-700"
+                stroke-width="8"
+                stroke="currentColor"
+                fill="transparent"
+                r="40"
+                cx="50"
+                cy="50"
+              />
+              <!-- Countdown circle -->
+              <circle
+                class="text-yellow-400 transition-all duration-100"
+                stroke-width="8"
+                stroke="currentColor"
+                fill="transparent"
+                r="40"
+                cx="50"
+                cy="50"
+                :stroke-dasharray="circleCircumference"
+                :stroke-dashoffset="strokeDashoffset"
+              />
+            </svg>
+            <div
+              class="absolute inset-0 flex items-center justify-center text-5xl font-bold"
+            >
+              X{{ combo }}
+            </div>
           </div>
         </div>
       </div>
@@ -475,12 +477,6 @@ const playSoundEffect = (sound) => {
           </div>
         </div>
       </div>
-      <button
-        @click="changePage('home'), resetGame()"
-        class="py-1 px-3 bg-yellow-200 rounded-lg"
-      >
-        Back
-      </button>
     </div>
   </div>
 </template>
