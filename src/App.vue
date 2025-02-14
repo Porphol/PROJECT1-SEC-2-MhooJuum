@@ -14,7 +14,7 @@ const selectedCharacter = ref('mole')
 watch(selectedCharacter, () => {
   if (selectedCharacter.value === 'mole') {
     logo.value = '/MhooJuum_logo.png'
-    moleImg.value = '/holeWithMole.png'
+    moleImg.value = '/holeWithMole.png' 
     holeImg.value = '/hole.png'
     bombImg.value = '/bomb.png'
     gameBg.value = '/bg-game.png'
@@ -359,27 +359,28 @@ const playSoundEffect = (sound) => {
       </audio>
 
       <div
-        class="flex justify-between items-center w-full px-8 py-4 bg-white bg-opacity-60 rounded-lg shadow-lg"
+        class="flex justify-between items-center w-full px-4 py-4 bg-white bg-opacity-60 rounded-lg shadow-lg"
       >
         <!-- Timer -->
-        <div class="text-4xl font-bold text-gray-800">
+        <div class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-800">
           {{ Math.floor(time / 60) }}:{{ time % 60 < 10 ? '0' : ''
           }}{{ time % 60 }}
         </div>
 
         <!-- High Score -->
-        <div class="text-4xl font-bold text-gray-800">
-          High score: <span class="text-5xl">{{ highScore }}</span>
+        <div class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-800">
+          High score: <span class="text-xl sm:text-3xl md:text-4xl lg:text-5xl">{{ highScore }}</span>
         </div>
 
         <!-- Score -->
-        <div class="text-4xl font-bold text-yellow-500 flex items-center gap-2">
-          Score: <span class="text-5xl">{{ score }}</span>
+        <div class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-yellow-500 flex items-center gap-2">
+          Score: <span class="sm:text-3xl md:text-4xl lg:text-5xl">{{ score }}</span>
         </div>
+        
         <!-- Life Points -->
-        <div class="flex flex-row gap-5">
+        <div class="flex flex-row gap-1 sm:gap-5 md:gap-5 lg:gap-5">
           <div v-for="hp in lifePoint">
-            <img src="./assets/life.png" v-if="hp" class="w-12" />
+            <img src="./assets/life.png" v-if="hp" class="w-4 sm:w-8 md:w-10 lg:w-12 xl:w-12" /> 
           </div>
         </div>
 
@@ -390,8 +391,8 @@ const playSoundEffect = (sound) => {
           <svg
             class="swap-on fill-current"
             xmlns="http://www.w3.org/2000/svg"
-            width="48"
-            height="48"
+            width="42"
+            height="42"
             viewBox="0 0 24 24"
           >
             <path
@@ -403,8 +404,8 @@ const playSoundEffect = (sound) => {
           <svg
             class="swap-off fill-current"
             xmlns="http://www.w3.org/2000/svg"
-            width="48"
-            height="48"
+            width="36"
+            height="36"
             viewBox="0 0 24 24"
           >
             <path
@@ -450,27 +451,27 @@ const playSoundEffect = (sound) => {
         </div>
       </div>
 
-      <div class="grid grid-cols-3 gap-2 mt-20">
+      <div class="grid grid-cols-3 gap-2 gap-y-10 sm:gap-2 md:gap-2 lg:gap-2 mt-32 sm:mt-28 md:mt-28 lg:mt-16 xl:mt-30">
         <div v-for="hole in 9" :key="hole">
           <div
             v-show="position === hole && isMole && !isHit"
             @click="clickObject()"
             class="flex justify-center hover:cursor-pointer"
           >
-            <img :src="moleImg" class="w-1/2" />
+            <img :src="moleImg" class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2" />
           </div>
           <div
             v-show="position === hole && !isMole && !isHit"
             @click="clickMiss()"
             class="flex justify-center hover:cursor-pointer"
           >
-            <img :src="bombImg" class="w-1/2" />
+            <img :src="bombImg" class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2" />
           </div>
           <div
             v-show="!(position === hole && !isHit)"
             class="flex justify-center"
           >
-            <img :src="holeImg" class="w-1/2" />
+            <img :src="holeImg" class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2" />
           </div>
         </div>
       </div>
