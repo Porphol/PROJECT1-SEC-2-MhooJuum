@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 const currentView = ref('home')
-const handleButtonClick = (view) => {
+const changePage = (view) => {
   currentView.value = view
 }
 
@@ -253,7 +253,7 @@ const playSoundEffect = (sound) => {
             class="max-h-[200px] w-auto absolute -top-[9.5rem] left-1/2 transform -translate-x-1/2"
           />
           <button
-            @click="handleButtonClick('game'), gameStart(10)"
+            @click="changePage('game'), gameStart(10)"
             class="py-2 px-14 bg-yellow-300 rounded-[4rem] text-[8rem] tracking-widest duration-200 hover:bg-yellow-500 hover:text-white hover:shadow-xl"
           >
             PLAY
@@ -320,16 +320,16 @@ const playSoundEffect = (sound) => {
       class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50"
     >
       <div
-        class="bg-white p-6 rounded-lg shadow-lg max-w-xl w-full"
+        class="bg-white p-6 rounded-lg shadow-lg w-2/3 sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-2/5"
         @click.stop
       >
-        <h2 class="text-2xl sm:text-3xl mb-4">{{ modalTitle }}</h2>
-        <p class="mb-2 text-lg leading-8 whitespace-pre-line">
+        <h2 class="text-2xl sm:text-3xl md:text-3xl mb-4 text-center">{{ modalTitle }}</h2>
+        <p class="mb-2 text-lg sm:text-lg md:text-xl leading-8 whitespace-pre-line">
           {{ modalMessage }}
         </p>
         <button
-          @click="toggleModal('', '')"
-          class="py-2 px-4 bg-yellow-500 rounded-lg text-white mt-4"
+          @click="toggleModal('', ''), changePage('home')"
+          class="py-1 px-4 bg-yellow-500 rounded-lg text-white mt-2 sm:mt-4 md:mt-4 lg:mt-4 xl:mt-4"
         >
           Close
         </button>
@@ -359,7 +359,7 @@ const playSoundEffect = (sound) => {
       </audio>
 
       <div
-        class="flex justify-between items-center w-full px-4 py-4 bg-white bg-opacity-60 rounded-lg shadow-lg"
+        class="flex justify-between items-center w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-4 bg-white bg-opacity-60 rounded-lg shadow-lg"
       >
         <!-- Timer -->
         <div class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-800">
@@ -476,7 +476,7 @@ const playSoundEffect = (sound) => {
         </div>
       </div>
       <button
-        @click="handleButtonClick('home'), resetGame()"
+        @click="changePage('home'), resetGame()"
         class="py-1 px-3 bg-yellow-200 rounded-lg"
       >
         Back
