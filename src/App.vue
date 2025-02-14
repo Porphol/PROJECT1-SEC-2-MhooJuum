@@ -404,73 +404,7 @@ const playSoundEffect = (sound) => {
           Back
         </button>
       </div>
-      <!-- combo -->
 
-      <div class="h-32 self-end mt-8 mr-8">
-        <div v-if="combo > 0" class="relative w-32 h-full">
-          <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-            <!-- Background circle -->
-            <circle
-              class="text-gray-700"
-              stroke-width="8"
-              stroke="currentColor"
-              fill="transparent"
-              r="40"
-              cx="50"
-              cy="50"
-            />
-            <!-- Countdown circle -->
-            <circle
-              class="text-yellow-400 transition-all duration-100"
-              stroke-width="8"
-              stroke="currentColor"
-              fill="transparent"
-              r="40"
-              cx="50"
-              cy="50"
-              :stroke-dasharray="circleCircumference"
-              :stroke-dashoffset="strokeDashoffset"
-            />
-          </svg>
-          <div
-            class="absolute inset-0 flex items-center justify-center text-5xl font-bold"
-            :class="selectedCharacter === 'mhoojuum' ? 'text-white' : 'text-black'"
-          >
-            X{{ combo }}
-          </div>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-3 gap-2 gap-y-10 sm:gap-2 md:gap-2 lg:gap-2 mt-32 sm:mt-28 md:mt-28 lg:mt-16 xl:mt-36">
-        <div v-for="hole in 9" :key="hole">
-          <div
-            v-show="position === hole && isMole && !isHit"
-            @click="clickObject()"
-            class="flex justify-center hover:cursor-pointer"
-          >
-            <img :src="moleImg" class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2" />
-          </div>
-          <div
-            v-show="position === hole && !isMole && !isHit"
-            @click="clickMiss()"
-            class="flex justify-center hover:cursor-pointer"
-          >
-            <img :src="bombImg" class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2" />
-          </div>
-          <div
-            v-show="!(position === hole && !isHit)"
-            class="flex justify-center"
-          >
-            <img :src="holeImg" class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2" />
-          </div>
-        </div>
-      </div>
-      <button
-        @click="changePage('home'), resetGame()"
-        class="py-1 px-3 bg-yellow-200 rounded-lg"
-      >
-        Back
-      </button>
     </div>
 </template>
 
