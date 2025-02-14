@@ -152,7 +152,8 @@ const clickObject = () => {
   setCountdownCombo()
   if (combo.value < 20) combo.value++
   startCountdownCombo()
-  score.value += Math.round(1 * (1 + 0.1 * (combo.value - 1)))
+  // score.value += Math.round(1 * (1 + 0.1 * (combo.value - 1)))
+  score.value += combo.value
   isHit.value = true
   playSoundEffect('correct')
 }
@@ -242,7 +243,7 @@ const playSoundEffect = (sound) => {
   <div class="font-Muffin text-black">
     <!-- Div Home Page -->
     <div v-show="currentView === 'home'" class="border h-screen bg-cover bg-no-repeat bg-center bg-bgHome">
-      <div class="absolute right-0 mr-10 mt-10">
+      <div class="absolute right-0 mr-7 mt-10 sm:mt-7">
         <button @click="
           toggleModal(
             'How to Play',
@@ -250,33 +251,37 @@ const playSoundEffect = (sound) => {
              - Click the character to score points.
              - Avoid clicking bombs to save your lives.`
           )
-          " class="pt-1 pb-2 px-5 bg-black rounded-[50%] font-bold text-white text-6xl">
+          " class="py-1 px-3 bg-black rounded-[50%] font-bold text-white text-[20px] sm:text-[30px] sm:px-4">
           ?
         </button>
       </div>
       <div>
-        <p class="text-center text-[180px] tracking-wider pt-6">
-          MHOOJUUM
-        </p>
+        <div class="text-center text-[60px] tracking-wider pt-[6rem] sm:hidden">
+          <div class=" pr-[7rem] -mb-10">MHOO</div>
+          <div class=" pl-[7rem]">JUUM</div>
+        </div>
+        <div class=" hidden sm:block text-center text-[100px] pt-[2rem] lg:text-[130px] ">
+            MHOOJUUM
+        </div>
         <div class="absolute top-[70%] left-1/2 transform -translate-x-1/2 -translate-y-1/2">
 
           <!-- Select character -->
-          <div class="flex items-center gap-4">
+          <div class="flex items-center gap-1 sm:gap-3">
             <button @click="prevCharacter"
-              class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full shadow-md transition text-5xl transform hover:scale-125">
+              class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full shadow-md transition text-2xl sm:text-4xl lg:text-6xl transform hover:scale-125">
               < </button>
 
                 <div>
                   <img :src="logo" alt=""
-                    class="max-h-[200px] w-auto absolute -top-[9.5rem] left-1/2 transform -translate-x-1/2" />
+                    class="max-h-[100px] sm:max-h-[140px] lg:max-h-[160px] w-auto absolute -top-[5rem] sm:-top-[8rem] lg:-top-[9rem] left-1/2 transform -translate-x-1/2 "  />
                   <button @click="changePage('game'), gameStart(30)"
-                    class="py-2 px-14 bg-yellow-300 rounded-[4rem] text-[8rem] tracking-widest duration-200 hover:bg-yellow-500 hover:text-white hover:shadow-xl">
+                    class="py-2 px-14 bg-yellow-300 rounded-[4rem] text-[40px] sm:text-[60px] lg:text-[80px] tracking-widest duration-200 hover:bg-yellow-500 hover:text-white hover:shadow-xl">
                     PLAY
                   </button>
                 </div>
 
                 <button @click="nextCharacter"
-                  class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full shadow-md transition text-5xl transform hover:scale-125">
+                  class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full shadow-md transition text-2xl sm:text-4xl lg:text-6xl transform hover:scale-125">
                   >
                 </button>
           </div>
