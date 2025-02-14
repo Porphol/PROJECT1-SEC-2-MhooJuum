@@ -451,7 +451,7 @@ const playSoundEffect = (sound) => {
         </div>
       </div>
 
-      <div class="grid grid-cols-3 gap-2 gap-y-10 sm:gap-2 md:gap-2 lg:gap-2 mt-32 sm:mt-28 md:mt-28 lg:mt-16 xl:mt-30">
+      <div class="grid grid-cols-3 gap-2 gap-y-10 sm:gap-2 md:gap-2 lg:gap-2 mt-32 sm:mt-28 md:mt-28 lg:mt-16 xl:mt-36">
         <div v-for="hole in 9" :key="hole">
           <div
             v-show="position === hole && isMole && !isHit"
