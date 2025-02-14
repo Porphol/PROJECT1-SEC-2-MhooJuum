@@ -5,16 +5,32 @@ const changePage = (view) => {
   currentView.value = view
 }
 
+
+const characters = ref(["mole", "rat", "mhoojuum"])
+
+const selectedIndex = ref(0)
+const selectedCharacter = ref(characters.value[selectedIndex.value])
+
+const nextCharacter = () => {
+  characters.value.length - 1 === selectedIndex.value ? selectedIndex.value = 0 : selectedIndex.value++
+  selectedCharacter.value = characters.value[selectedIndex.value]
+}
+
+const prevCharacter = () => {
+  selectedIndex.value === 0 ? selectedIndex.value = characters.value.length - 1 : selectedIndex.value--
+  selectedCharacter.value = characters.value[selectedIndex.value]
+}
+
 const logo = ref('/MhooJuum_logo.png')
 const moleImg = ref('/holeWithMole.png')
 const holeImg = ref('/hole.png')
 const bombImg = ref('/bomb.png')
 const gameBg = ref('/bg-game.png')
-const selectedCharacter = ref('mole')
+
 watch(selectedCharacter, () => {
   if (selectedCharacter.value === 'mole') {
     logo.value = '/MhooJuum_logo.png'
-    moleImg.value = '/holeWithMole.png' 
+    moleImg.value = '/holeWithMole.png'
     holeImg.value = '/hole.png'
     bombImg.value = '/bomb.png'
     gameBg.value = '/bg-game.png'
@@ -32,6 +48,8 @@ watch(selectedCharacter, () => {
     gameBg.value = '/bg-mhoojuum.png'
   }
 })
+
+
 
 const position = ref(0)
 const isMole = ref(true)
@@ -110,9 +128,10 @@ const toggleModal = (title, message) => {
 let gameStatus = true
 const resetGame = () => {
   gameStatus = true
+  selectedIndex.value === 0
   score.value = 0
   combo.value = 0
-  countdownCombo.value = 5
+  countdownCombo.value = 10
   lifePoint.value = [true, true, true]
   indexLifePoint = lifePoint.value.length - 1
   time.value = 0
@@ -144,11 +163,11 @@ const countdownCombo = ref(5)
 
 const setCountdownCombo = () => {
   if (combo.value >= 15) {
-    countdownCombo.value = 1.5
-  } else if (combo.value >= 10) {
     countdownCombo.value = 3
-  } else {
+  } else if (combo.value >= 10) {
     countdownCombo.value = 5
+  } else {
+    countdownCombo.value = 8
   }
   countdownMax = countdownCombo.value
 }
@@ -222,22 +241,16 @@ const playSoundEffect = (sound) => {
 <template>
   <div class="font-Muffin text-black">
     <!-- Div Home Page -->
-    <div
-      v-show="currentView === 'home'"
-      class="border h-screen bg-cover bg-no-repeat bg-center bg-bgHome"
-    >
+    <div v-show="currentView === 'home'" class="border h-screen bg-cover bg-no-repeat bg-center bg-bgHome">
       <div class="absolute right-0 mr-10 mt-10">
-        <button
-          @click="
-            toggleModal(
-              'How to Play',
-              `- Select your favorite character before starting the game.
+        <button @click="
+          toggleModal(
+            'How to Play',
+            `- Select your favorite character before starting the game.
              - Click the character to score points.
              - Avoid clicking bombs to save your lives.`
-            )
-          "
-          class="pt-1 pb-2 px-5 bg-black rounded-[50%] font-bold text-white text-6xl"
-        >
+          )
+          " class="pt-1 pb-2 px-5 bg-black rounded-[50%] font-bold text-white text-6xl">
           ?
         </button>
       </div>
@@ -245,109 +258,53 @@ const playSoundEffect = (sound) => {
         <p class="text-center text-[180px] tracking-wider pt-6">
           MHOOJUUM
         </p>
-        <div
-          class="absolute top-[70%] left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-        >
-          <img
-            :src="logo"
-            alt=""
-            class="max-h-[200px] w-auto absolute -top-[9.5rem] left-1/2 transform -translate-x-1/2"
-          />
-          <button
-            @click="changePage('game'), gameStart(10)"
-            class="py-2 px-14 bg-yellow-300 rounded-[4rem] text-[8rem] tracking-widest duration-200 hover:bg-yellow-500 hover:text-white hover:shadow-xl"
-          >
-            PLAY
-          </button>
-          <div class="flex gap-8">
-            <label
-              class="rounded-[4rem] px-4 py-2 flex items-center gap-2 cursor-pointer transition hover:bg-yellow-400"
-              :class="
-                selectedCharacter === 'mole'
-                  ? 'bg-yellow-500 text-white'
-                  : 'bg-yellow-300'
-              "
-            >
-              <input
-                type="radio"
-                value="mole"
-                v-model="selectedCharacter"
-                class="hidden"
-              />
-              <span>Mole</span>
-            </label>
+        <div class="absolute top-[70%] left-1/2 transform -translate-x-1/2 -translate-y-1/2">
 
-            <label
-              class="rounded-[4rem] px-4 py-2 flex items-center gap-2 cursor-pointer transition hover:bg-yellow-400"
-              :class="
-                selectedCharacter === 'rat'
-                  ? 'bg-yellow-500 text-white'
-                  : 'bg-yellow-300'
-              "
-            >
-              <input
-                type="radio"
-                value="rat"
-                v-model="selectedCharacter"
-                class="hidden"
-              />
-              <span>Rat</span>
-            </label>
+          <!-- Select character -->
+          <div class="flex items-center gap-4">
+            <button @click="prevCharacter"
+              class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full shadow-md transition text-5xl transform hover:scale-125">
+              < </button>
 
-            <label
-              class="rounded-[4rem] px-4 py-2 flex items-center gap-2 cursor-pointer transition hover:bg-yellow-400"
-              :class="
-                selectedCharacter === 'mhoojuum'
-                  ? 'bg-yellow-500 text-white'
-                  : 'bg-yellow-300'
-              "
-            >
-              <input
-                type="radio"
-                value="mhoojuum"
-                v-model="selectedCharacter"
-                class="hidden"
-              />
-              <span>MhooJuum</span>
-            </label>
+                <div>
+                  <img :src="logo" alt=""
+                    class="max-h-[200px] w-auto absolute -top-[9.5rem] left-1/2 transform -translate-x-1/2" />
+                  <button @click="changePage('game'), gameStart(30)"
+                    class="py-2 px-14 bg-yellow-300 rounded-[4rem] text-[8rem] tracking-widest duration-200 hover:bg-yellow-500 hover:text-white hover:shadow-xl">
+                    PLAY
+                  </button>
+                </div>
+
+                <button @click="nextCharacter"
+                  class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full shadow-md transition text-5xl transform hover:scale-125">
+                  >
+                </button>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Modal -->
-    <div
-      v-if="showModal"
-      class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50"
-    >
-      <div
-        class="bg-white p-6 rounded-lg shadow-lg w-2/3 sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-2/5"
-        @click.stop
-      >
+    <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-2/3 sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-2/5" @click.stop>
         <h2 class="text-2xl sm:text-3xl md:text-3xl mb-4 text-center">{{ modalTitle }}</h2>
         <p class="my-8 text-lg sm:text-lg md:text-xl leading-8 whitespace-pre-line">
           {{ modalMessage }}
         </p>
-        <button
-          @click="toggleModal('', ''), changePage('home')"
-          class="py-1 px-4 bg-yellow-500 rounded-lg text-white mt-2 sm:mt-4 md:mt-4 lg:mt-4 xl:mt-4"
-        >
+        <button @click="toggleModal('', ''), changePage('home')"
+          class="py-1 px-4 bg-yellow-500 rounded-lg text-white mt-2 sm:mt-4 md:mt-4 lg:mt-4 xl:mt-4">
           Close
         </button>
       </div>
     </div>
 
     <!-- Game View -->
-    <div
-      v-show="currentView === 'game'"
+    <div v-show="currentView === 'game'"
       class="absolute inset-0 flex flex-col items-center justify-start text-center bg-cover bg-center bg-no-repeat"
-      :style="{ backgroundImage: `url(${gameBg})` }"
-    >
+      :style="{ backgroundImage: `url(${gameBg})` }">
       <!-- countDown before start -->
-      <div
-        v-if="startTime > 0"
-        class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 text-[180px] text-white"
-      >
+      <div v-if="startTime > 0"
+        class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 text-[180px] text-white">
         {{ startTime }}
       </div>
       <!-- sound effect -->
@@ -360,125 +317,85 @@ const playSoundEffect = (sound) => {
       </audio>
 
       <div
-        class="flex justify-between items-center w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-4 bg-white bg-opacity-60 rounded-lg shadow-lg"
-      >
+        class="flex justify-between items-center w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-4 bg-white bg-opacity-60 rounded-lg shadow-lg">
         <!-- Timer -->
         <div class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-800">
-          {{ Math.floor(time / 60) }}:{{ time % 60 < 10 ? '0' : ''
-          }}{{ time % 60 }}
-        </div>
+          {{ Math.floor(time / 60) }}:{{ time % 60 < 10 ? '0' : '' }}{{ time % 60 }} </div>
 
-        <!-- High Score -->
-        <div class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-800">
-          High score: <span class="text-xl sm:text-3xl md:text-4xl lg:text-5xl">{{ highScore }}</span>
-        </div>
+            <!-- High Score -->
+            <div class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-800">
+              High score: <span class="text-xl sm:text-3xl md:text-4xl lg:text-5xl">{{ highScore }}</span>
+            </div>
 
-        <!-- Score -->
-        <div class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-yellow-500 flex items-center gap-2">
-          Score: <span class="sm:text-3xl md:text-4xl lg:text-5xl">{{ score }}</span>
+            <!-- Score -->
+            <div class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-yellow-500 flex items-center gap-2">
+              Score: <span class="sm:text-3xl md:text-4xl lg:text-5xl">{{ score }}</span>
+            </div>
+
+            <!-- Life Points -->
+            <div class="flex flex-row gap-1 sm:gap-5 md:gap-5 lg:gap-5">
+              <div v-for="hp in lifePoint">
+                <img src="./assets/life.png" v-if="hp" class="w-4 sm:w-8 md:w-10 lg:w-12 xl:w-12" />
+              </div>
+            </div>
+
+            <!-- sound -->
+            <label class="swap">
+              <input type="checkbox" @click="playSound" v-model="soundOn" />
+              <!-- volume on icon -->
+              <svg class="swap-on fill-current" xmlns="http://www.w3.org/2000/svg" width="42" height="42"
+                viewBox="0 0 24 24">
+                <path
+                  d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
+              </svg>
+
+              <!-- volume off icon -->
+              <svg class="swap-off fill-current" xmlns="http://www.w3.org/2000/svg" width="36" height="36"
+                viewBox="0 0 24 24">
+                <path
+                  d="M3,9H7L12,4V20L7,15H3V9M16.59,12L14,9.41L15.41,8L18,10.59L20.59,8L22,9.41L19.41,12L22,14.59L20.59,16L18,13.41L15.41,16L14,14.59L16.59,12Z" />
+              </svg>
+            </label>
         </div>
-        
-        <!-- Life Points -->
-        <div class="flex flex-row gap-1 sm:gap-5 md:gap-5 lg:gap-5">
-          <div v-for="hp in lifePoint">
-            <img src="./assets/life.png" v-if="hp" class="w-4 sm:w-8 md:w-10 lg:w-12 xl:w-12" /> 
+        <div class="w-full flex justify-between mt-8 px-16"
+          :class="selectedCharacter === 'mhoojuum' ? 'text-white' : 'text-black'">
+          <button @click="changePage('home'), resetGame()" class="text-6xl">BACK</button>
+          <!-- combo -->
+          <div class="h-32">
+            <div v-if="combo > 0" class="relative w-32 h-full">
+              <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                <!-- Background circle -->
+                <circle class="text-gray-700" stroke-width="8" stroke="currentColor" fill="transparent" r="40" cx="50"
+                  cy="50" />
+                <!-- Countdown circle -->
+                <circle class="text-yellow-400 transition-all duration-100" stroke-width="8" stroke="currentColor"
+                  fill="transparent" r="40" cx="50" cy="50" :stroke-dasharray="circleCircumference"
+                  :stroke-dashoffset="strokeDashoffset" />
+              </svg>
+              <div class="absolute inset-0 flex items-center justify-center text-5xl font-bold">
+                X{{ combo }}
+              </div>
+            </div>
           </div>
         </div>
-
-        <!-- sound -->
-        <label class="swap">
-          <input type="checkbox" @click="playSound" v-model="soundOn" />
-          <!-- volume on icon -->
-          <svg
-            class="swap-on fill-current"
-            xmlns="http://www.w3.org/2000/svg"
-            width="42"
-            height="42"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z"
-            />
-          </svg>
-
-          <!-- volume off icon -->
-          <svg
-            class="swap-off fill-current"
-            xmlns="http://www.w3.org/2000/svg"
-            width="36"
-            height="36"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M3,9H7L12,4V20L7,15H3V9M16.59,12L14,9.41L15.41,8L18,10.59L20.59,8L22,9.41L19.41,12L22,14.59L20.59,16L18,13.41L15.41,16L14,14.59L16.59,12Z"
-            />
-          </svg>
-        </label>
-      </div>
-      <div class="w-full flex justify-between mt-8 px-16" :class="selectedCharacter === 'mhoojuum' ? 'text-white' : 'text-black'">
-        <button @click="changePage('home'), resetGame()" class="text-6xl">BACK</button>
-        <!-- combo -->
-        <div class="h-32">
-          <div v-if="combo > 0" class="relative w-32 h-full" >
-            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-              <!-- Background circle -->
-              <circle
-                class="text-gray-700"
-                stroke-width="8"
-                stroke="currentColor"
-                fill="transparent"
-                r="40"
-                cx="50"
-                cy="50"
-              />
-              <!-- Countdown circle -->
-              <circle
-                class="text-yellow-400 transition-all duration-100"
-                stroke-width="8"
-                stroke="currentColor"
-                fill="transparent"
-                r="40"
-                cx="50"
-                cy="50"
-                :stroke-dasharray="circleCircumference"
-                :stroke-dashoffset="strokeDashoffset"
-              />
-            </svg>
-            <div
-              class="absolute inset-0 flex items-center justify-center text-5xl font-bold"
-            >
-              X{{ combo }}
+        <div
+          class="grid grid-cols-3 gap-2 gap-y-10 sm:gap-2 md:gap-2 lg:gap-2 mt-32 sm:mt-28 md:mt-28 lg:mt-16 xl:mt-36">
+          <div v-for="hole in 9" :key="hole">
+            <div v-show="position === hole && isMole && !isHit" @click="clickObject()"
+              class="flex justify-center hover:cursor-pointer">
+              <img :src="moleImg" class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2" />
+            </div>
+            <div v-show="position === hole && !isMole && !isHit" @click="clickMiss()"
+              class="flex justify-center hover:cursor-pointer">
+              <img :src="bombImg" class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2" />
+            </div>
+            <div v-show="!(position === hole && !isHit)" class="flex justify-center">
+              <img :src="holeImg" class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2" />
             </div>
           </div>
         </div>
       </div>
-
-      <div class="grid grid-cols-3 gap-2 gap-y-10 sm:gap-2 md:gap-2 lg:gap-2 mt-32 sm:mt-28 md:mt-28 lg:mt-16 xl:mt-36">
-        <div v-for="hole in 9" :key="hole">
-          <div
-            v-show="position === hole && isMole && !isHit"
-            @click="clickObject()"
-            class="flex justify-center hover:cursor-pointer"
-          >
-            <img :src="moleImg" class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2" />
-          </div>
-          <div
-            v-show="position === hole && !isMole && !isHit"
-            @click="clickMiss()"
-            class="flex justify-center hover:cursor-pointer"
-          >
-            <img :src="bombImg" class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2" />
-          </div>
-          <div
-            v-show="!(position === hole && !isHit)"
-            class="flex justify-center"
-          >
-            <img :src="holeImg" class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2" />
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
 </template>
 
 <style scoped></style>
