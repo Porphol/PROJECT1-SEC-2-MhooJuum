@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 const currentView = ref('home')
-const handleButtonClick = (view) => {
+const changePage = (view) => {
   currentView.value = view
 }
 
@@ -268,7 +268,7 @@ const playSoundEffect = (sound) => {
               <div>
                 <img :src="logo" alt=""
                   class="max-h-[200px] w-auto absolute -top-[9.5rem] left-1/2 transform -translate-x-1/2" />
-                <button @click="handleButtonClick('game'), gameStart(30)"
+                <button @click="changePage('game'), gameStart(30)"
                   class="py-2 px-14 bg-yellow-300 rounded-[4rem] text-[8rem] tracking-widest duration-200 hover:bg-yellow-500 hover:text-white hover:shadow-xl">
                     PLAY
                 </button>
@@ -283,13 +283,22 @@ const playSoundEffect = (sound) => {
     </div>
 
     <!-- Modal -->
-    <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-      <div class="bg-white p-6 rounded-lg shadow-lg max-w-xl w-full" @click.stop>
-        <h2 class="text-2xl sm:text-3xl mb-4">{{ modalTitle }}</h2>
-        <p class="mb-2 text-lg leading-8 whitespace-pre-line">
+    <div
+      v-if="showModal"
+      class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50"
+    >
+      <div
+        class="bg-white p-6 rounded-lg shadow-lg w-2/3 sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-2/5"
+        @click.stop
+      >
+        <h2 class="text-2xl sm:text-3xl md:text-3xl mb-4 text-center">{{ modalTitle }}</h2>
+        <p class="mb-2 text-lg sm:text-lg md:text-xl leading-8 whitespace-pre-line">
           {{ modalMessage }}
         </p>
-        <button @click="toggleModal('', '')" class="py-2 px-4 bg-yellow-500 rounded-lg text-white mt-4">
+        <button
+          @click="toggleModal('', ''), changePage('home')"
+          class="py-1 px-4 bg-yellow-500 rounded-lg text-white mt-2 sm:mt-4 md:mt-4 lg:mt-4 xl:mt-4"
+        >
           Close
         </button>
       </div>
@@ -313,7 +322,9 @@ const playSoundEffect = (sound) => {
         <source src="./assets/sound/wrong.mp3" type="audio/mp3" />
       </audio>
 
-      <div class="flex justify-between items-center w-full px-4 py-4 bg-white bg-opacity-60 rounded-lg shadow-lg">
+      <div
+        class="flex justify-between items-center w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-4 bg-white bg-opacity-60 rounded-lg shadow-lg"
+      >
         <!-- Timer -->
         <div class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-800">
           {{ Math.floor(time / 60) }}:{{ time % 60 < 10 ? '0' : '' }}{{ time % 60 }} </div>
@@ -389,10 +400,77 @@ const playSoundEffect = (sound) => {
             </div>
           </div>
         </div>
-        <button @click="handleButtonClick('home'), resetGame()" class="py-1 px-3 bg-yellow-200 rounded-lg">
+        <button @click="changePage('home'), resetGame()" class="py-1 px-3 bg-yellow-200 rounded-lg">
           Back
         </button>
       </div>
+      <!-- combo -->
+
+      <div class="h-32 self-end mt-8 mr-8">
+        <div v-if="combo > 0" class="relative w-32 h-full">
+          <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+            <!-- Background circle -->
+            <circle
+              class="text-gray-700"
+              stroke-width="8"
+              stroke="currentColor"
+              fill="transparent"
+              r="40"
+              cx="50"
+              cy="50"
+            />
+            <!-- Countdown circle -->
+            <circle
+              class="text-yellow-400 transition-all duration-100"
+              stroke-width="8"
+              stroke="currentColor"
+              fill="transparent"
+              r="40"
+              cx="50"
+              cy="50"
+              :stroke-dasharray="circleCircumference"
+              :stroke-dashoffset="strokeDashoffset"
+            />
+          </svg>
+          <div
+            class="absolute inset-0 flex items-center justify-center text-5xl font-bold"
+            :class="selectedCharacter === 'mhoojuum' ? 'text-white' : 'text-black'"
+          >
+            X{{ combo }}
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2 gap-y-10 sm:gap-2 md:gap-2 lg:gap-2 mt-32 sm:mt-28 md:mt-28 lg:mt-16 xl:mt-36">
+        <div v-for="hole in 9" :key="hole">
+          <div
+            v-show="position === hole && isMole && !isHit"
+            @click="clickObject()"
+            class="flex justify-center hover:cursor-pointer"
+          >
+            <img :src="moleImg" class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2" />
+          </div>
+          <div
+            v-show="position === hole && !isMole && !isHit"
+            @click="clickMiss()"
+            class="flex justify-center hover:cursor-pointer"
+          >
+            <img :src="bombImg" class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2" />
+          </div>
+          <div
+            v-show="!(position === hole && !isHit)"
+            class="flex justify-center"
+          >
+            <img :src="holeImg" class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2" />
+          </div>
+        </div>
+      </div>
+      <button
+        @click="changePage('home'), resetGame()"
+        class="py-1 px-3 bg-yellow-200 rounded-lg"
+      >
+        Back
+      </button>
     </div>
 </template>
 
