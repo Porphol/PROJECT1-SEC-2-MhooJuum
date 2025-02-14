@@ -5,19 +5,22 @@ const changePage = (view) => {
   currentView.value = view
 }
 
-
-const characters = ref(["mole", "rat", "mhoojuum"])
+const characters = ref(['mole', 'rat', 'mhoojuum'])
 
 const selectedIndex = ref(0)
 const selectedCharacter = ref(characters.value[selectedIndex.value])
 
 const nextCharacter = () => {
-  characters.value.length - 1 === selectedIndex.value ? selectedIndex.value = 0 : selectedIndex.value++
+  characters.value.length - 1 === selectedIndex.value
+    ? (selectedIndex.value = 0)
+    : selectedIndex.value++
   selectedCharacter.value = characters.value[selectedIndex.value]
 }
 
 const prevCharacter = () => {
-  selectedIndex.value === 0 ? selectedIndex.value = characters.value.length - 1 : selectedIndex.value--
+  selectedIndex.value === 0
+    ? (selectedIndex.value = characters.value.length - 1)
+    : selectedIndex.value--
   selectedCharacter.value = characters.value[selectedIndex.value]
 }
 
@@ -48,8 +51,6 @@ watch(selectedCharacter, () => {
     gameBg.value = '/bg-mhoojuum.png'
   }
 })
-
-
 
 const position = ref(0)
 const isMole = ref(true)
@@ -257,31 +258,32 @@ const playSoundEffect = (sound) => {
       </div>
       <div>
         <div class="text-center text-[60px] tracking-wider pt-[6rem] sm:hidden">
-          <div class=" pr-[7rem] -mb-10">MHOO</div>
-          <div class=" pl-[7rem]">JUUM</div>
+          <div class="pr-[7rem] -mb-10">MHOO</div>
+          <div class="pl-[7rem]">JUUM</div>
         </div>
-        <div class=" hidden sm:block text-center text-[100px] pt-[2rem] lg:text-[130px] ">
-            MHOOJUUM
+        <div class="hidden sm:block text-center text-[100px] pt-[2rem] lg:text-[130px] xl:text-[170px]">
+          MHOOJUUM
         </div>
         <div class="absolute top-[70%] left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-
           <!-- Select character -->
-          <div class="flex items-center gap-1 sm:gap-3">
+          <div class="flex items-center gap-1 sm:gap-3 xl:gap-7">
             <button @click="prevCharacter"
-              class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full shadow-md transition text-2xl sm:text-4xl lg:text-6xl transform hover:scale-125">
+              class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full shadow-md transition text-2xl sm:text-4xl lg:text-6xl xl:text-8xl transform hover:scale-125">
               < </button>
 
                 <div>
                   <img :src="logo" alt=""
-                    class="max-h-[100px] sm:max-h-[140px] lg:max-h-[160px] w-auto absolute -top-[5rem] sm:-top-[8rem] lg:-top-[9rem] left-1/2 transform -translate-x-1/2 "  />
-                  <button @click="changePage('game'), gameStart(30)"
-                    class="py-2 px-14 bg-yellow-300 rounded-[4rem] text-[40px] sm:text-[60px] lg:text-[80px] tracking-widest duration-200 hover:bg-yellow-500 hover:text-white hover:shadow-xl">
+                    class="h-[100px] sm:h-[150px] lg:h-[170px] xl:h-[180px] absolute -top-[5rem] sm:-top-[8rem] lg:-top-[9rem] left-1/2 transform -translate-x-1/2" />
+                  <button @click="
+                    changePage('game'), gameStart(30)
+                    "
+                    class="py-2 px-14 bg-yellow-300 rounded-full text-[40px] sm:text-[60px] lg:text-[80px] xl:text-[120px] tracking-widest duration-200 hover:bg-yellow-500 hover:text-white hover:shadow-xl">
                     PLAY
                   </button>
                 </div>
 
                 <button @click="nextCharacter"
-                  class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full shadow-md transition text-2xl sm:text-4xl lg:text-6xl transform hover:scale-125">
+                  class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full shadow-md transition text-2xl sm:text-4xl lg:text-6xl xl:text-8xl transform hover:scale-125">
                   >
                 </button>
           </div>
@@ -292,7 +294,9 @@ const playSoundEffect = (sound) => {
     <!-- Modal -->
     <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
       <div class="bg-white p-6 rounded-lg shadow-lg w-2/3 sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-2/5" @click.stop>
-        <h2 class="text-2xl sm:text-3xl md:text-3xl mb-4 text-center">{{ modalTitle }}</h2>
+        <h2 class="text-2xl sm:text-3xl md:text-3xl mb-4 text-center">
+          {{ modalTitle }}
+        </h2>
         <p class="my-8 text-lg sm:text-lg md:text-xl leading-8 whitespace-pre-line">
           {{ modalMessage }}
         </p>
@@ -328,13 +332,19 @@ const playSoundEffect = (sound) => {
           {{ Math.floor(time / 60) }}:{{ time % 60 < 10 ? '0' : '' }}{{ time % 60 }} </div>
 
             <!-- High Score -->
-            <div class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-800">
-              High score: <span class="text-xl sm:text-3xl md:text-4xl lg:text-5xl">{{ highScore }}</span>
+            <div class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-800 flex items-center">
+              High score:
+              <span class="text-xl sm:text-3xl md:text-4xl lg:text-5xl">{{
+                highScore
+              }}</span>
             </div>
 
             <!-- Score -->
             <div class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-yellow-500 flex items-center gap-2">
-              Score: <span class="sm:text-3xl md:text-4xl lg:text-5xl">{{ score }}</span>
+              Score:
+              <span class="sm:text-3xl md:text-4xl lg:text-5xl">{{
+                score
+              }}</span>
             </div>
 
             <!-- Life Points -->
@@ -362,11 +372,16 @@ const playSoundEffect = (sound) => {
               </svg>
             </label>
         </div>
-        <div class="w-full flex justify-between mt-8 px-16"
-          :class="selectedCharacter === 'mhoojuum' ? 'text-white' : 'text-black'">
-          <button @click="changePage('home'), resetGame()" class="text-6xl">BACK</button>
+
+        <div class="w-full flex justify-between mt-8 px-4 sm:px-6 md:px-16" :class="selectedCharacter === 'mhoojuum'
+            ? 'text-white'
+            : 'text-black'
+          ">
+          <button @click="changePage('home'), resetGame()" class="text-3xl sm:text-4xl md:text-4xl lg:text-5xl">
+            BACK
+          </button>
           <!-- combo -->
-          <div class="h-32">
+          <div class="h-28">
             <div v-if="combo > 0" class="relative w-32 h-full">
               <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                 <!-- Background circle -->
