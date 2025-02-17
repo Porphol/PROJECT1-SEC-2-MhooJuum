@@ -150,8 +150,8 @@ const resetGame = () => {
 const score = ref(0)
 const clickObject = () => {
   if (!gameStatus) return
-  setCountdownCombo()
   if (combo.value < 20) combo.value++
+  setCountdownCombo()
   startCountdownCombo()
   // score.value += Math.round(1 * (1 + 0.1 * (combo.value - 1)))
   score.value += combo.value
@@ -180,7 +180,7 @@ const startCountdownCombo = () => {
 
   countdownTimer = setInterval(() => {
     countdownCombo.value -= 0.1
-    if (countdownCombo.value <= 0) {
+    if (countdownCombo.value <= 0) { 
       clearInterval(countdownTimer)
       if (combo.value >= 15) {
         combo.value = 10
@@ -196,7 +196,7 @@ const startCountdownCombo = () => {
 // Circle countdown
 let countdownMax = 5
 const circleCircumference = 2 * Math.PI * 40
-const strokeDashoffset = computed(() => {
+const circleCountdown = computed(() => {
   return circleCircumference * (1 - countdownCombo.value / countdownMax)
 })
 
@@ -266,12 +266,12 @@ const playSoundEffect = (sound) => {
         </div>
         <div class="absolute top-[70%] left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <!-- Select character -->
-          <div class="flex items-center gap-1 sm:gap-3 xl:gap-7">
+          <div class="flex items-center gap-4 sm:gap-3 xl:gap-7">
             <button @click="prevCharacter"
               class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full shadow-md transition text-2xl sm:text-4xl lg:text-6xl xl:text-8xl transform hover:scale-125">
               < </button>
 
-                <div>
+                <div class="hover:scale-105">
                   <img :src="logo" alt=""
                     class="h-[100px] sm:h-[150px] lg:h-[170px] xl:h-[180px] absolute -top-[5rem] sm:-top-[8rem] lg:-top-[9rem] left-1/2 transform -translate-x-1/2" />
                   <button @click="
@@ -390,7 +390,7 @@ const playSoundEffect = (sound) => {
                 <!-- Countdown circle -->
                 <circle class="text-yellow-400 transition-all duration-100" stroke-width="8" stroke="currentColor"
                   fill="transparent" r="40" cx="50" cy="50" :stroke-dasharray="circleCircumference"
-                  :stroke-dashoffset="strokeDashoffset" />
+                  :stroke-dashoffset="circleCountdown" />
               </svg>
               <div class="absolute inset-0 flex items-center justify-center text-5xl font-bold">
                 X{{ combo }}
