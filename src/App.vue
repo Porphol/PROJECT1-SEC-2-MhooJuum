@@ -78,7 +78,7 @@ const gameStart = (duration) => {
 }
 
 let gameInterval = null
-const gameCountDown = (func, delay = 1500) => {
+const gameCountDown = (func, delay = 1000) => {
   func()
   gameInterval = setInterval(() => {
     func()
@@ -152,7 +152,7 @@ const score = ref(0)
 const clickObject = () => {
   if (!gameStatus) return
   if (combo.value < 20) combo.value++
-  setCountdownCombo(3)
+  setCountdownCombo(2)
   startCountdownCombo()
   score.value += combo.value
   isHit.value = true
@@ -163,7 +163,7 @@ const clickObject = () => {
 const combo = ref(0)
 const countdownCombo = ref(5)
 
-const setCountdownCombo = (time = 3) => {
+const setCountdownCombo = (time = 2) => {
   if (combo.value >= 15) {
     countdownCombo.value = time
   } else if (combo.value >= 10) {
@@ -184,7 +184,7 @@ const startCountdownCombo = () => {
       clearInterval(countdownTimer)
       if (combo.value >= 15) {
         combo.value = 10
-        setCountdownCombo(3)
+        setCountdownCombo(2)
         startCountdownCombo()
       } else {
         combo.value = 0
@@ -275,7 +275,7 @@ const playSoundEffect = (sound) => {
                   <img :src="logo" alt=""
                     class="h-[100px] sm:h-[150px] lg:h-[170px] xl:h-[180px] absolute -top-[5rem] sm:-top-[8rem] lg:-top-[9rem] left-1/2 transform -translate-x-1/2" />
                   <button @click="
-                    changePage('game'), gameStart(30)
+                    changePage('game'), gameStart(60)
                     "
                     class="py-2 px-14 bg-yellow-300 rounded-full text-[40px] sm:text-[60px] lg:text-[80px] xl:text-[120px] tracking-widest duration-200 hover:bg-yellow-500 hover:text-white hover:shadow-xl">
                     PLAY
