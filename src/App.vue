@@ -56,7 +56,7 @@ watch(selectedCharacter, () => {
 const position = ref(0)
 const isMole = ref(true)
 const isHit = ref(false)
-const random = (num) => {
+const randomPosition = (num) => {
   position.value = Math.floor(Math.random() * num) + 1
   isMole.value = Math.random() < 0.7
 }
@@ -71,7 +71,7 @@ const gameStart = (duration) => {
     startTime.value--
     if (startTime.value <= 0) {
       clearInterval(startInterval)
-      gameCountDown(() => random(9))
+      gameCountDown(() => randomPosition(9))
       countDown(duration)
     }
   }, 1000)
@@ -253,7 +253,7 @@ const playSoundEffect = (sound) => {
              - Click the character to score points.
              - Avoid clicking bombs to save your lives.`
           )
-          " class="py-1 px-3 bg-black rounded-[50%] font-bold text-white text-[20px] sm:text-[30px] sm:px-4">
+          " class="py-1 px-3 bg-black rounded-full font-bold text-white text-[20px] sm:text-[30px] sm:px-4">
           ?
         </button>
       </div>
@@ -272,7 +272,7 @@ const playSoundEffect = (sound) => {
               class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full shadow-md transition text-2xl sm:text-4xl lg:text-6xl xl:text-8xl transform hover:scale-125">
               < </button>
 
-                <div class="hover:scale-105">
+                <div class="hover:scale-105 transition">
                   <img :src="logo" alt=""
                     class="h-[100px] sm:h-[150px] lg:h-[170px] xl:h-[180px] absolute -top-[5rem] sm:-top-[8rem] lg:-top-[9rem] left-1/2 transform -translate-x-1/2" />
                   <button @click="
