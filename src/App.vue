@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
+
 const currentView = ref('home')
 const changePage = (view) => {
   currentView.value = view
@@ -163,13 +164,13 @@ const clickObject = () => {
 const combo = ref(0)
 const countdownCombo = ref(5)
 
-const setCountdownCombo = () => {
+const setCountdownCombo = (time = 1.5) => {
   if (combo.value >= 15) {
-    countdownCombo.value = 3
+    countdownCombo.value = time * 2.3  // 3.45 s
   } else if (combo.value >= 10) {
-    countdownCombo.value = 5
+    countdownCombo.value = time * 3.3 // 5 s
   } else {
-    countdownCombo.value = 8
+    countdownCombo.value = time * 5.3 // 8 s
   }
   countdownMax = countdownCombo.value
 }
