@@ -137,7 +137,7 @@ const resetGame = () => {
   combo.value = 0
   countdownCombo.value = 10
   lifePoint.value = [true, true, true]
-  indexLifePoint = lifePoint.value.length - 1
+  indexLifePoint = 0
   time.value = 0
   startTime.value = 0
   position.value = 0
@@ -163,7 +163,7 @@ const clickObject = () => {
 
 // Count combo
 const combo = ref(0)
-const countdownCombo = ref(5)
+const countdownCombo = ref(null)
 
 const setCountdownCombo = (time = 2) => {
   if (combo.value >= 15) {
@@ -196,7 +196,7 @@ const startCountdownCombo = () => {
 }
 
 // Circle countdown
-let countdownMax = 5
+let countdownMax = null
 const circleCircumference = 2 * Math.PI * 40
 const circleCountdown = computed(() => {
   return circleCircumference * (1 - countdownCombo.value / countdownMax)
@@ -204,11 +204,11 @@ const circleCountdown = computed(() => {
 
 // Life point
 const lifePoint = ref([true, true, true])
-let indexLifePoint = lifePoint.value.length - 1
+let indexLifePoint = 0
 const clickMiss = () => {
   if (!gameStatus) return
   lifePoint.value[indexLifePoint] = false
-  indexLifePoint -= 1
+  indexLifePoint++
   combo.value = 0
   isHit.value = true
   playSoundEffect('wrong')
