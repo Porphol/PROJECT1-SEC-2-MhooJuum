@@ -152,9 +152,8 @@ const score = ref(0)
 const clickObject = () => {
   if (!gameStatus) return
   if (combo.value < 20) combo.value++
-  setCountdownCombo()
+  setCountdownCombo(3)
   startCountdownCombo()
-  // score.value += Math.round(1 * (1 + 0.1 * (combo.value - 1)))
   score.value += combo.value
   isHit.value = true
   playSoundEffect('correct')
@@ -164,13 +163,13 @@ const clickObject = () => {
 const combo = ref(0)
 const countdownCombo = ref(5)
 
-const setCountdownCombo = (time = 1.5) => {
+const setCountdownCombo = (time = 3) => {
   if (combo.value >= 15) {
-    countdownCombo.value = time * 2.3  // 3.45 s
+    countdownCombo.value = time
   } else if (combo.value >= 10) {
-    countdownCombo.value = time * 3.3 // 5 s
+    countdownCombo.value = time * 2
   } else {
-    countdownCombo.value = time * 5.3 // 8 s
+    countdownCombo.value = time * 3
   }
   countdownMax = countdownCombo.value
 }
@@ -185,7 +184,7 @@ const startCountdownCombo = () => {
       clearInterval(countdownTimer)
       if (combo.value >= 15) {
         combo.value = 10
-        setCountdownCombo()
+        setCountdownCombo(3)
         startCountdownCombo()
       } else {
         combo.value = 0
@@ -253,7 +252,7 @@ const playSoundEffect = (sound) => {
              - Click the character to score points.
              - Avoid clicking bombs to save your lives.`
           )
-          " class="py-1 px-3 bg-black rounded-full font-bold text-white text-[20px] sm:text-[30px] sm:px-4">
+          " class="py-1 px-[0.9rem] bg-black rounded-full font-bold text-white text-[20px] sm:text-[30px] sm:px-5">
           ?
         </button>
       </div>
