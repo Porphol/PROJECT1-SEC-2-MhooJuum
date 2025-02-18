@@ -352,7 +352,8 @@ const playSoundEffect = (sound) => {
             <!-- Life Points -->
             <div class="flex flex-row gap-1 sm:gap-5 md:gap-5 lg:gap-5">
               <div v-for="hp in lifePoint">
-                <img src="./assets/life.png" v-if="hp" class="w-4 sm:w-8 md:w-10 lg:w-12 xl:w-12" />
+                <img src="./assets/image/grayHeart.png" v-if="!hp" class="w-4 sm:w-8 md:w-10 lg:w-12 xl:w-12" />
+                <img src="./assets/image/redHeart.png" v-if="hp" class="w-4 sm:w-8 md:w-10 lg:w-12 xl:w-12" />
               </div>
             </div>
 
