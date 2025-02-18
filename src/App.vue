@@ -63,9 +63,11 @@ const randomPosition = (num) => {
 
 const time = ref(0)
 const startTime = ref(0)
+const numHole = ref(0)
 let startInterval = null
-const gameStart = (duration) => {
+const gameStart = (duration , numCount) => {
   resetGame()
+  numHole.value = numCount
   startTime.value = 3
   startInterval = setInterval(() => {
     startTime.value--
@@ -275,7 +277,7 @@ const playSoundEffect = (sound) => {
                   <img :src="logo" alt=""
                     class="h-[100px] sm:h-[150px] lg:h-[170px] xl:h-[180px] absolute -top-[5rem] sm:-top-[8rem] lg:-top-[9rem] left-1/2 transform -translate-x-1/2" />
                   <button @click="
-                    changePage('game'), gameStart(60)
+                    changePage('game'), gameStart(60,9)
                     "
                     class="py-2 px-14 bg-yellow-300 rounded-full text-[40px] sm:text-[60px] lg:text-[80px] xl:text-[120px] tracking-widest duration-200 hover:bg-yellow-500 hover:text-white hover:shadow-xl">
                     PLAY
@@ -399,8 +401,8 @@ const playSoundEffect = (sound) => {
           </div>
         </div>
         <div
-          class="grid grid-cols-3 gap-2 gap-y-10 sm:gap-2 md:gap-2 lg:gap-2 mt-32 sm:mt-28 md:mt-28 lg:mt-16 xl:mt-36">
-          <div v-for="hole in 9" :key="hole">
+          class="grid grid-cols-3 gap-2 gap-y-10 sm:gap-2 md:gap-2 lg:gap-2 mt-[10vh]">
+          <div v-for="hole in numHole" :key="hole">
             <div v-show="position === hole && isMole && !isHit" @click="clickObject()"
               class="flex justify-center hover:cursor-pointer">
               <img :src="moleImg" class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2" />
