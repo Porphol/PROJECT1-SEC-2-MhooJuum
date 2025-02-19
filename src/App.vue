@@ -73,7 +73,7 @@ const gameStart = (duration , numCount) => {
     startTime.value--
     if (startTime.value <= 0) {
       clearInterval(startInterval)
-      gameCountDown(() => randomPosition(9))
+      gameCountDown(() => randomPosition(numHole.value))
       countDown(duration)
     }
   }, 1000)
@@ -105,7 +105,6 @@ const countDown = (duration, delay = 1000) => {
       )
     }
     // Game over
-    // Life point = [false, false, false]
     if (!lifePoint.value.includes(true)) {
       clearInterval(timeInterval)
       clearInterval(gameInterval)
@@ -244,7 +243,7 @@ const playSoundEffect = (sound) => {
 
 <template>
   <div class="font-Muffin text-black">
-    <!-- Div Home Page -->
+    <!-- Home Page -->
     <div v-show="currentView === 'home'" class="border h-screen bg-cover bg-no-repeat bg-center bg-bgHome">
       <div class="absolute right-0 mr-7 mt-10 sm:mt-7">
         <button @click="
@@ -334,8 +333,8 @@ const playSoundEffect = (sound) => {
           {{ Math.floor(time / 60) }}:{{ time % 60 < 10 ? '0' : '' }}{{ time % 60 }} </div>
 
             <!-- High Score -->
-            <div class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-800 flex items-center">
-              High score:
+            <div class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-800 flex items-center gap-2">
+              High score: 
               <span class="text-xl sm:text-3xl md:text-4xl lg:text-5xl">{{
                 highScore
               }}</span>
@@ -360,15 +359,12 @@ const playSoundEffect = (sound) => {
             <!-- sound -->
             <label class="swap">
               <input type="checkbox" @click="playSound" v-model="soundOn" />
-              <!-- volume on icon -->
               <svg class="swap-on fill-current" xmlns="http://www.w3.org/2000/svg" width="42" height="42"
                 viewBox="0 0 24 24">
                 <path
                   d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
               </svg>
-
-              <!-- volume off icon -->
-              <svg class="swap-off fill-current" xmlns="http://www.w3.org/2000/svg" width="36" height="36"
+              <svg class="swap-off fill-current" xmlns="http://www.w3.org/2000/svg" width="42" height="42"
                 viewBox="0 0 24 24">
                 <path
                   d="M3,9H7L12,4V20L7,15H3V9M16.59,12L14,9.41L15.41,8L18,10.59L20.59,8L22,9.41L19.41,12L22,14.59L20.59,16L18,13.41L15.41,16L14,14.59L16.59,12Z" />
