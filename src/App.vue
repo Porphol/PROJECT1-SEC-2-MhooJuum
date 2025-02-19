@@ -294,7 +294,7 @@ const playSoundEffect = (sound) => {
 
     <!-- Modal -->
     <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-      <div class="bg-white p-6 rounded-lg shadow-lg w-2/3 sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-2/5" @click.stop>
+      <div class="bg-white p-6 rounded-lg shadow-lg w-2/3 sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-2/5">
         <h2 class="text-2xl sm:text-3xl md:text-3xl mb-4 text-center">
           {{ modalTitle }}
         </h2>
