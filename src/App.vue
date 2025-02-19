@@ -251,9 +251,9 @@ const playSoundEffect = (sound) => {
             'How to Play',
             `- Select your favorite character before starting the game.
              - Click the character to score points.
-             - Avoid clicking bombs to save your lives.`
+             - Avoid clicking bombs to save your lives.` 
           )
-          " class="py-1 px-[0.9rem] bg-black rounded-full font-bold text-white text-[20px] sm:text-[30px] sm:px-5">
+          " class="transition hover:scale-125 py-1 px-[0.9rem] bg-black rounded-full font-bold text-white text-[20px] sm:text-[30px] sm:px-5">
           ?
         </button>
       </div>
@@ -302,7 +302,7 @@ const playSoundEffect = (sound) => {
           {{ modalMessage }}
         </p>
         <button @click="toggleModal('', ''), changePage('home')"
-          class="py-1 px-4 bg-yellow-500 rounded-lg text-white mt-2 sm:mt-4 md:mt-4 lg:mt-4 xl:mt-4">
+          class="transition hover:bg-yellow-600 py-1 px-4 bg-yellow-500 rounded-lg text-white mt-2 sm:mt-4 md:mt-4 lg:mt-4 xl:mt-4">
           Close
         </button>
       </div>
@@ -329,7 +329,7 @@ const playSoundEffect = (sound) => {
       <div
         class="flex justify-between items-center w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-4 bg-white bg-opacity-60 rounded-lg shadow-lg">
         <!-- Timer -->
-        <div class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-800">
+        <div class=" text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-800">
           {{ Math.floor(time / 60) }}:{{ time % 60 < 10 ? '0' : '' }}{{ time % 60 }} </div>
 
             <!-- High Score -->
