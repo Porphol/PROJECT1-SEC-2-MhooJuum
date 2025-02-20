@@ -1,28 +1,30 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 
+// Change View
 const currentView = ref('home')
 const changePage = (view) => {
-  currentView.value = view
+    currentView.value = view
 }
 
+// Change Character
 const characters = ref(['mole', 'rat', 'mhoojuum'])
 
 const selectedIndex = ref(0)
 const selectedCharacter = ref(characters.value[selectedIndex.value])
 
 const nextCharacter = () => {
-  characters.value.length - 1 === selectedIndex.value
-    ? (selectedIndex.value = 0)
-    : selectedIndex.value++
-  selectedCharacter.value = characters.value[selectedIndex.value]
+    characters.value.length - 1 === selectedIndex.value
+        ? (selectedIndex.value = 0)
+        : selectedIndex.value++
+    selectedCharacter.value = characters.value[selectedIndex.value]
 }
 
 const prevCharacter = () => {
-  selectedIndex.value === 0
-    ? (selectedIndex.value = characters.value.length - 1)
-    : selectedIndex.value--
-  selectedCharacter.value = characters.value[selectedIndex.value]
+    selectedIndex.value === 0
+        ? (selectedIndex.value = characters.value.length - 1)
+        : selectedIndex.value--
+    selectedCharacter.value = characters.value[selectedIndex.value]
 }
 
 const logo = ref('/MhooJuum_logo.png')
@@ -32,132 +34,132 @@ const bombImg = ref('/bomb.png')
 const gameBg = ref('/bg-game.png')
 
 watch(selectedCharacter, () => {
-  if (selectedCharacter.value === 'mole') {
-    logo.value = '/MhooJuum_logo.png'
-    moleImg.value = '/holeWithMole.png'
-    holeImg.value = '/hole.png'
-    bombImg.value = '/bomb.png'
-    gameBg.value = '/bg-game.png'
-  } else if (selectedCharacter.value === 'rat') {
-    logo.value = '/mouse.png'
-    moleImg.value = '/holeWithMouse.png'
-    holeImg.value = '/mouseHole.png'
-    bombImg.value = '/angryCat.png'
-    gameBg.value = '/bgHouse.png'
-  } else if (selectedCharacter.value === 'mhoojuum') {
-    logo.value = '/Pork.png'
-    moleImg.value = '/hotpotWithBoiledPork.png'
-    holeImg.value = '/hotpot.png'
-    bombImg.value = '/hotpotWithRawPork.png'
-    gameBg.value = '/bg-mhoojuum.png'
-  }
+    if (selectedCharacter.value === 'mole') {
+        logo.value = '/MhooJuum_logo.png'
+        moleImg.value = '/holeWithMole.png'
+        holeImg.value = '/hole.png'
+        bombImg.value = '/bomb.png'
+        gameBg.value = '/bg-game.png'
+    } else if (selectedCharacter.value === 'rat') {
+        logo.value = '/mouse.png'
+        moleImg.value = '/holeWithMouse.png'
+        holeImg.value = '/mouseHole.png'
+        bombImg.value = '/angryCat.png'
+        gameBg.value = '/bgHouse.png'
+    } else if (selectedCharacter.value === 'mhoojuum') {
+        logo.value = '/Pork.png'
+        moleImg.value = '/hotpotWithBoiledPork.png'
+        holeImg.value = '/hotpot.png'
+        bombImg.value = '/hotpotWithRawPork.png'
+        gameBg.value = '/bg-mhoojuum.png'
+    }
 })
 
+// random position
 const position = ref(0)
 const isMole = ref(true)
 const isHit = ref(false)
 const randomPosition = (num) => {
-  position.value = Math.floor(Math.random() * num) + 1
-  isMole.value = Math.random() < 0.7
+    position.value = Math.floor(Math.random() * num) + 1
+    isMole.value = Math.random() < 0.7
 }
 
+// Game Countdown
 const time = ref(0)
 const startTime = ref(0)
 const numHole = ref(0)
 let startInterval = null
-const gameStart = (duration , numCount) => {
-  resetGame()
-  numHole.value = numCount
-  startTime.value = 3
-  startInterval = setInterval(() => {
-    startTime.value--
-    if (startTime.value <= 0) {
-      clearInterval(startInterval)
-      gameCountDown(() => randomPosition(numHole.value))
-      countDown(duration)
-    }
-  }, 1000)
+const gameStart = (duration, numCount) => {
+    resetGame()
+    numHole.value = numCount
+    startTime.value = 3
+    startInterval = setInterval(() => {
+        startTime.value--
+        if (startTime.value <= 0) {
+            clearInterval(startInterval)
+            gameCountDown(() => randomPosition(numHole.value))
+            countDown(duration)
+        }
+    }, 1000)
 }
 
 let gameInterval = null
 const gameCountDown = (func, delay = 1000) => {
-  func()
-  gameInterval = setInterval(() => {
     func()
-    isHit.value = false
-  }, delay)
+    gameInterval = setInterval(() => {
+        func()
+        isHit.value = false
+    }, delay)
 }
 
 let timeInterval = null
 const countDown = (duration, delay = 1000) => {
-  time.value = duration
-  timeInterval = setInterval(() => {
-    time.value--
-    // Time's up
-    if (time.value <= 0) {
-      clearInterval(timeInterval)
-      clearInterval(gameInterval)
-      gameStatus = false
-      updateHighScore()
-      toggleModal(
-        "Time's up",
-        `Your high score is ${highScore.value} \n Your final score is ${score.value}`
-      )
-    }
-    // Game over
-    if (!lifePoint.value.includes(true)) {
-      clearInterval(timeInterval)
-      clearInterval(gameInterval)
-      updateHighScore()
-      gameStatus = false
-      toggleModal(
-        'Game over',
-        `Your high score is ${highScore.value} \n Your final score is ${score.value}`
-      )
-    }
-  }, delay)
+    time.value = duration
+    timeInterval = setInterval(() => {
+        time.value--
+        // Time's up
+        if (time.value <= 0) {
+            clearInterval(timeInterval)
+            clearInterval(gameInterval)
+            gameStatus = false
+            updateHighScore()
+            toggleModal(
+                "Time's up",
+                `Your high score is ${highScore.value} \n Your final score is ${score.value}`
+            )
+        }
+        // Game over
+        if (!lifePoint.value.includes(true)) {
+            clearInterval(timeInterval)
+            clearInterval(gameInterval)
+            updateHighScore()
+            gameStatus = false
+            toggleModal(
+                'Game over',
+                `Your high score is ${highScore.value} \n Your final score is ${score.value}`
+            )
+        }
+    }, delay)
 }
 
+// Modal
 const showModal = ref(false)
 const modalTitle = ref('')
 const modalMessage = ref('')
 const toggleModal = (title, message) => {
-  modalTitle.value = title
-  modalMessage.value = message
-  showModal.value = !showModal.value
+    modalTitle.value = title
+    modalMessage.value = message
+    showModal.value = !showModal.value
 }
 
 // Game controller
 let gameStatus = true
 const resetGame = () => {
-  gameStatus = true
-  selectedIndex.value === 0
-  score.value = 0
-  combo.value = 0
-  countdownCombo.value = 10
-  lifePoint.value = [true, true, true]
-  indexLifePoint = 0
-  time.value = 0
-  startTime.value = 0
-  position.value = 0
-  isHit.value = false
-  isMole.value = true
-  clearInterval(countdownTimer)
-  clearInterval(startInterval)
-  clearInterval(timeInterval)
-  clearInterval(gameInterval)
+    gameStatus = true
+    score.value = 0
+    combo.value = 0
+    lifePoint.value = [true, true, true]
+    indexLifePoint = 0
+    time.value = 0
+    startTime.value = 0
+    position.value = 0
+    isHit.value = false
+    clearInterval(countdownTimer)
+    clearInterval(startInterval)
+    clearInterval(timeInterval)
+    clearInterval(gameInterval)
 }
 
 // Count score
 const score = ref(0)
 const clickObject = () => {
-  if (!gameStatus) return
-  if (combo.value < 20) combo.value++
-  setCountdownCombo(2)
-  startCountdownCombo()
-  score.value += combo.value
-  isHit.value = true
-  playSoundEffect('correct')
+    if (!gameStatus) return
+    if (combo.value < 20) combo.value++
+    setCountdownCombo(2)
+    startCountdownCombo()
+    score.value += combo.value
+    isHit.value = true
+    playSoundEffect('correct')
 }
 
 // Count combo
@@ -165,65 +167,66 @@ const combo = ref(0)
 const countdownCombo = ref(null)
 
 const setCountdownCombo = (time = 2) => {
-  if (combo.value >= 15) {
-    countdownCombo.value = time
-  } else if (combo.value >= 10) {
-    countdownCombo.value = time * 2
-  } else {
-    countdownCombo.value = time * 3
-  }
-  countdownMax = countdownCombo.value
+    if (combo.value >= 15) {
+        countdownCombo.value = time
+    } else if (combo.value >= 10) {
+        countdownCombo.value = time * 2
+    } else {
+        countdownCombo.value = time * 3
+    }
+    countdownMax = countdownCombo.value
 }
 
 let countdownTimer = null
 const startCountdownCombo = () => {
-  clearInterval(countdownTimer)
+    clearInterval(countdownTimer)
 
-  countdownTimer = setInterval(() => {
-    countdownCombo.value -= 0.1
-    if (countdownCombo.value <= 0) { 
-      clearInterval(countdownTimer)
-      if (combo.value >= 15) {
-        combo.value = 10
-        setCountdownCombo(2)
-        startCountdownCombo()
-      } else {
-        combo.value = 0
-      }
-    }
-  }, 100)
+    countdownTimer = setInterval(() => {
+        countdownCombo.value -= 0.1
+        if (countdownCombo.value <= 0) {
+            clearInterval(countdownTimer)
+            if (combo.value >= 15) {
+                combo.value = 10
+                setCountdownCombo(2)
+                startCountdownCombo()
+            } else {
+                combo.value = 0
+            }
+        }
+    }, 100)
 }
 
 // Circle countdown
 let countdownMax = null
 const circleCircumference = 2 * Math.PI * 40
 const circleCountdown = computed(() => {
-  return circleCircumference * (1 - countdownCombo.value / countdownMax)
+    return circleCircumference * (1 - countdownCombo.value / countdownMax)
 })
 
 // Life point
 const lifePoint = ref([true, true, true])
 let indexLifePoint = 0
 const clickMiss = () => {
-  if (!gameStatus) return
-  lifePoint.value[indexLifePoint] = false
-  indexLifePoint++
-  combo.value = 0
-  isHit.value = true
-  playSoundEffect('wrong')
+    if (!gameStatus) return
+    lifePoint.value[indexLifePoint] = false
+    indexLifePoint++
+    combo.value = 0
+    clearInterval(countdownTimer)
+    isHit.value = true
+    playSoundEffect('wrong')
 }
 
 // High Score
 const highScore = ref(0)
 const updateHighScore = () => {
-  if (score.value > highScore.value) {
-    highScore.value = score.value
-  }
+    if (score.value > highScore.value) {
+        highScore.value = score.value
+    }
 }
 
 const soundOn = ref(true)
 const playSound = () => {
-  soundOn.value = !soundOn.value
+    soundOn.value = !soundOn.value
 }
 
 // playSoundEffect
@@ -231,189 +234,314 @@ const correctSoundPlayer = ref('')
 const wrongSoundPlayer = ref('')
 
 const playSoundEffect = (sound) => {
-  if (sound === 'correct' && soundOn.value) {
-    correctSoundPlayer.value.play()
-    correctSoundPlayer.value.volume = 0.1
-  } else if (sound === 'wrong' && soundOn.value) {
-    wrongSoundPlayer.value.play()
-    wrongSoundPlayer.value.volume = 0.1
-  }
+    if (sound === 'correct' && soundOn.value) {
+        correctSoundPlayer.value.play()
+        correctSoundPlayer.value.volume = 0.1
+    } else if (sound === 'wrong' && soundOn.value) {
+        wrongSoundPlayer.value.play()
+        wrongSoundPlayer.value.volume = 0.1
+    }
 }
 </script>
 
 <template>
-  <div class="font-Muffin text-black">
-    <!-- Home Page -->
-    <div v-show="currentView === 'home'" class="border h-screen bg-cover bg-no-repeat bg-center bg-bgHome">
-      <div class="absolute right-0 mr-7 mt-10 sm:mt-7">
-        <button @click="
-          toggleModal(
-            'How to Play',
-            `- Select your favorite character before starting the game.
+    <div class="font-Muffin text-black">
+        <!-- Home Page -->
+        <div
+            v-show="currentView === 'home'"
+            class="border h-screen bg-cover bg-no-repeat bg-center bg-bgHome"
+        >
+            <div class="absolute right-0 mr-7 mt-10 sm:mt-7">
+                <button
+                    @click="
+                        toggleModal(
+                            'How to Play',
+                            `- Select your favorite character before starting the game.
              - Click the character to score points.
-             - Avoid clicking bombs to save your lives.` 
-          )
-          " class="transition hover:scale-125 py-1 px-[0.9rem] bg-black rounded-full font-bold text-white text-[20px] sm:text-[30px] sm:px-5">
-          ?
-        </button>
-      </div>
-      <div>
-        <div class="text-center text-[60px] tracking-wider pt-[6rem] sm:hidden">
-          <div class="pr-[7rem] -mb-10">MHOO</div>
-          <div class="pl-[7rem]">JUUM</div>
-        </div>
-        <div class="hidden sm:block text-center text-[100px] pt-[2rem] lg:text-[130px] xl:text-[170px]">
-          MHOOJUUM
-        </div>
-        <div class="absolute top-[70%] left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <!-- Select character -->
-          <div class="flex items-center gap-4 sm:gap-3 xl:gap-7">
-            <button @click="prevCharacter"
-              class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full shadow-md transition text-2xl sm:text-4xl lg:text-6xl xl:text-8xl transform hover:scale-125">
-              < </button>
-
-                <div class="hover:scale-105 transition">
-                  <img :src="logo" alt=""
-                    class="h-[100px] sm:h-[150px] lg:h-[170px] xl:h-[180px] absolute -top-[5rem] sm:-top-[8rem] lg:-top-[9rem] left-1/2 transform -translate-x-1/2" />
-                  <button @click="
-                    changePage('game'), gameStart(60,9)
+             - Avoid clicking bombs to save your lives.`
+                        )
                     "
-                    class="py-2 px-14 bg-yellow-300 rounded-full text-[40px] sm:text-[60px] lg:text-[80px] xl:text-[120px] tracking-widest duration-200 hover:bg-yellow-500 hover:text-white hover:shadow-xl">
-                    PLAY
-                  </button>
+                    class="transition hover:scale-125 py-1 px-[0.9rem] bg-black rounded-full font-bold text-white text-[20px] sm:text-[30px] sm:px-5"
+                >
+                    ?
+                </button>
+            </div>
+            <div>
+                <div
+                    class="text-center text-[60px] tracking-wider pt-[6rem] sm:hidden"
+                >
+                    <div class="pr-[7rem] -mb-10">MHOO</div>
+                    <div class="pl-[7rem]">JUUM</div>
+                </div>
+                <div
+                    class="hidden sm:block text-center text-[100px] pt-[2rem] lg:text-[130px] xl:text-[170px]"
+                >
+                    MHOOJUUM
+                </div>
+                <div
+                    class="absolute top-[70%] left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+                >
+                    <!-- Select character -->
+                    <div class="flex items-center gap-4 sm:gap-3 xl:gap-7">
+                        <button
+                            @click="prevCharacter"
+                            class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full shadow-md transition text-2xl sm:text-4xl lg:text-6xl xl:text-8xl transform hover:scale-125"
+                        >
+                            <
+                        </button>
+
+                        <div
+                            @click="changePage('game'), gameStart(60, 9)"
+                            class="group hover:scale-105 transition relative cursor-pointer"
+                        >
+                            <img
+                                :src="logo"
+                                alt=""
+                                class="h-[100px] sm:h-[150px] lg:h-[170px] xl:h-[180px] absolute -top-[5rem] sm:-top-[8rem] lg:-top-[9rem] left-1/2 transform -translate-x-1/2"
+                            />
+
+                            <button
+                                class="py-2 px-14 bg-yellow-300 rounded-full text-[40px] sm:text-[60px] lg:text-[80px] xl:text-[120px] tracking-widest duration-200 group-hover:bg-yellow-500 group-hover:text-white group-hover:shadow-xl"
+                            >
+                                PLAY
+                            </button>
+                        </div>
+
+                        <button
+                            @click="nextCharacter"
+                            class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full shadow-md transition text-2xl sm:text-4xl lg:text-6xl xl:text-8xl transform hover:scale-125"
+                        >
+                            >
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div
+            v-if="showModal"
+            class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50"
+        >
+            <div
+                class="bg-white p-6 rounded-lg shadow-lg w-2/3 sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-2/5"
+            >
+                <h2 class="text-2xl sm:text-3xl md:text-3xl mb-4 text-center">
+                    {{ modalTitle }}
+                </h2>
+                <p
+                    class="my-8 text-lg sm:text-lg md:text-xl leading-8 whitespace-pre-line"
+                >
+                    {{ modalMessage }}
+                </p>
+                <button
+                    @click="toggleModal('', ''), changePage('home')"
+                    class="transition hover:bg-yellow-600 py-1 px-4 bg-yellow-500 rounded-lg text-white mt-2 sm:mt-4 md:mt-4 lg:mt-4 xl:mt-4"
+                >
+                    Close
+                </button>
+            </div>
+        </div>
+
+        <!-- Game View -->
+        <div
+            v-show="currentView === 'game'"
+            class="absolute inset-0 flex flex-col items-center justify-start text-center bg-cover bg-center bg-no-repeat"
+            :style="{ backgroundImage: `url(${gameBg})` }"
+        >
+            <!-- countDown before start -->
+            <div
+                v-if="startTime > 0"
+                class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 text-[180px] text-white"
+            >
+                {{ startTime }}
+            </div>
+            <!-- sound effect -->
+            <audio ref="correctSoundPlayer">
+                <source src="./assets/sound/correct.mp3" type="audio/mp3" />
+            </audio>
+
+            <audio ref="wrongSoundPlayer">
+                <source src="./assets/sound/wrong.mp3" type="audio/mp3" />
+            </audio>
+
+            <!-- Game Header -->
+            <div
+                class="flex justify-between items-center w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-4 bg-white bg-opacity-80 rounded-lg shadow-lg"
+            >
+                <!-- Timer -->
+                <div
+                    class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-800"
+                >
+                    {{ Math.floor(time / 60) }}:{{ time % 60 < 10 ? '0' : ''
+                    }}{{ time % 60 }}
                 </div>
 
-                <button @click="nextCharacter"
-                  class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-full shadow-md transition text-2xl sm:text-4xl lg:text-6xl xl:text-8xl transform hover:scale-125">
-                  >
+                <!-- High Score -->
+                <div
+                    class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-800 flex items-center gap-2"
+                >
+                    High score:
+                    <span class="text-xl sm:text-3xl md:text-4xl lg:text-5xl">{{
+                        highScore
+                    }}</span>
+                </div>
+
+                <!-- Score -->
+                <div
+                    class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-yellow-500 flex items-center gap-2"
+                >
+                    Score:
+                    <span class="sm:text-3xl md:text-4xl lg:text-5xl">{{
+                        score
+                    }}</span>
+                </div>
+
+                <!-- Life Points -->
+                <div class="flex flex-row gap-1 sm:gap-5 md:gap-5 lg:gap-5">
+                    <div v-for="hp in lifePoint">
+                        <img
+                            src="./assets/image/grayHeart.png"
+                            v-if="!hp"
+                            class="w-4 sm:w-8 md:w-10 lg:w-12 xl:w-12"
+                        />
+                        <img
+                            src="./assets/image/redHeart.png"
+                            v-if="hp"
+                            class="w-4 sm:w-8 md:w-10 lg:w-12 xl:w-12"
+                        />
+                    </div>
+                </div>
+
+                <!-- sound -->
+                <label class="swap">
+                    <input
+                        type="checkbox"
+                        @click="playSound"
+                        v-model="soundOn"
+                    />
+                    <svg
+                        class="swap-on fill-current"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="42"
+                        height="42"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z"
+                        />
+                    </svg>
+                    <svg
+                        class="swap-off fill-current"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="42"
+                        height="42"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M3,9H7L12,4V20L7,15H3V9M16.59,12L14,9.41L15.41,8L18,10.59L20.59,8L22,9.41L19.41,12L22,14.59L20.59,16L18,13.41L15.41,16L14,14.59L16.59,12Z"
+                        />
+                    </svg>
+                </label>
+            </div>
+
+            
+            <div
+                class="w-full flex justify-between mt-8 px-4 sm:px-6 md:px-16"
+                :class="
+                    selectedCharacter === 'mhoojuum'
+                        ? 'text-white'
+                        : 'text-black'
+                "
+            >
+                <button
+                    @click="changePage('home'), resetGame()"
+                    class="shadow-lg bg-yellow-500 hover:bg-yellow-600 hover:scale-105 transition px-6 py-2 lg:px-8 lg:py-4 rounded-full h-fit text-3xl sm:text-4xl lg:text-5xl"
+                    :class="
+                    selectedCharacter === 'mhoojuum'
+                        ? 'hover:text-black'
+                        : 'hover:text-white'
+                "
+                >
+                    BACK
                 </button>
-          </div>
+
+                <!-- combo -->
+                <div class="h-28">
+                    <div v-if="combo > 0" class="relative w-32 h-full">
+                        <svg
+                            class="w-full h-full transform -rotate-90"
+                            viewBox="0 0 100 100"
+                        >
+                            <!-- Background circle -->
+                            <circle
+                                class="text-gray-700"
+                                stroke-width="8"
+                                stroke="currentColor"
+                                fill="transparent"
+                                r="40"
+                                cx="50"
+                                cy="50"
+                            />
+                            <!-- Countdown circle -->
+                            <circle
+                                class="text-yellow-400 transition-all duration-100"
+                                stroke-width="8"
+                                stroke="currentColor"
+                                fill="transparent"
+                                r="40"
+                                cx="50"
+                                cy="50"
+                                :stroke-dasharray="circleCircumference"
+                                :stroke-dashoffset="circleCountdown"
+                            />
+                        </svg>
+                        <div
+                            class="absolute inset-0 flex items-center justify-center text-5xl font-bold"
+                        >
+                            X{{ combo }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Secction -->
+            <div
+                class="grid grid-cols-3 gap-2 gap-y-10 sm:gap-2 md:gap-2 lg:gap-2 mt-[10vh]"
+            >
+                <div v-for="hole in numHole" :key="hole">
+                    <div
+                        v-show="position === hole && isMole && !isHit"
+                        @click="clickObject()"
+                        class="flex justify-center hover:cursor-pointer"
+                    >
+                        <img
+                            :src="moleImg"
+                            class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2"
+                        />
+                    </div>
+                    <div
+                        v-show="position === hole && !isMole && !isHit"
+                        @click="clickMiss()"
+                        class="flex justify-center hover:cursor-pointer"
+                    >
+                        <img
+                            :src="bombImg"
+                            class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2"
+                        />
+                    </div>
+                    <div
+                        v-show="!(position === hole && !isHit)"
+                        class="flex justify-center"
+                    >
+                        <img
+                            :src="holeImg"
+                            class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2"
+                        />
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-
-    <!-- Modal -->
-    <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-      <div class="bg-white p-6 rounded-lg shadow-lg w-2/3 sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-2/5">
-        <h2 class="text-2xl sm:text-3xl md:text-3xl mb-4 text-center">
-          {{ modalTitle }}
-        </h2>
-        <p class="my-8 text-lg sm:text-lg md:text-xl leading-8 whitespace-pre-line">
-          {{ modalMessage }}
-        </p>
-        <button @click="toggleModal('', ''), changePage('home')"
-          class="transition hover:bg-yellow-600 py-1 px-4 bg-yellow-500 rounded-lg text-white mt-2 sm:mt-4 md:mt-4 lg:mt-4 xl:mt-4">
-          Close
-        </button>
-      </div>
-    </div>
-
-    <!-- Game View -->
-    <div v-show="currentView === 'game'"
-      class="absolute inset-0 flex flex-col items-center justify-start text-center bg-cover bg-center bg-no-repeat"
-      :style="{ backgroundImage: `url(${gameBg})` }">
-      <!-- countDown before start -->
-      <div v-if="startTime > 0"
-        class="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 text-[180px] text-white">
-        {{ startTime }}
-      </div>
-      <!-- sound effect -->
-      <audio ref="correctSoundPlayer">
-        <source src="./assets/sound/correct.mp3" type="audio/mp3" />
-      </audio>
-
-      <audio ref="wrongSoundPlayer">
-        <source src="./assets/sound/wrong.mp3" type="audio/mp3" />
-      </audio>
-
-      <div
-        class="flex justify-between items-center w-full px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-4 bg-white bg-opacity-60 rounded-lg shadow-lg">
-        <!-- Timer -->
-        <div class=" text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-800">
-          {{ Math.floor(time / 60) }}:{{ time % 60 < 10 ? '0' : '' }}{{ time % 60 }} </div>
-
-            <!-- High Score -->
-            <div class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-gray-800 flex items-center gap-2">
-              High score: 
-              <span class="text-xl sm:text-3xl md:text-4xl lg:text-5xl">{{
-                highScore
-              }}</span>
-            </div>
-
-            <!-- Score -->
-            <div class="text-xl sm:text-3xl md:text-3xl lg:text-4xl font-bold text-yellow-500 flex items-center gap-2">
-              Score:
-              <span class="sm:text-3xl md:text-4xl lg:text-5xl">{{
-                score
-              }}</span>
-            </div>
-
-            <!-- Life Points -->
-            <div class="flex flex-row gap-1 sm:gap-5 md:gap-5 lg:gap-5">
-              <div v-for="hp in lifePoint">
-                <img src="./assets/image/grayHeart.png" v-if="!hp" class="w-4 sm:w-8 md:w-10 lg:w-12 xl:w-12" />
-                <img src="./assets/image/redHeart.png" v-if="hp" class="w-4 sm:w-8 md:w-10 lg:w-12 xl:w-12" />
-              </div>
-            </div>
-
-            <!-- sound -->
-            <label class="swap">
-              <input type="checkbox" @click="playSound" v-model="soundOn" />
-              <svg class="swap-on fill-current" xmlns="http://www.w3.org/2000/svg" width="42" height="42"
-                viewBox="0 0 24 24">
-                <path
-                  d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
-              </svg>
-              <svg class="swap-off fill-current" xmlns="http://www.w3.org/2000/svg" width="42" height="42"
-                viewBox="0 0 24 24">
-                <path
-                  d="M3,9H7L12,4V20L7,15H3V9M16.59,12L14,9.41L15.41,8L18,10.59L20.59,8L22,9.41L19.41,12L22,14.59L20.59,16L18,13.41L15.41,16L14,14.59L16.59,12Z" />
-              </svg>
-            </label>
-        </div>
-
-        <div class="w-full flex justify-between mt-8 px-4 sm:px-6 md:px-16" :class="selectedCharacter === 'mhoojuum'
-            ? 'text-white'
-            : 'text-black'
-          ">
-          <button @click="changePage('home'), resetGame()" class="text-3xl sm:text-4xl md:text-4xl lg:text-5xl">
-            BACK
-          </button>
-          <!-- combo -->
-          <div class="h-28">
-            <div v-if="combo > 0" class="relative w-32 h-full">
-              <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                <!-- Background circle -->
-                <circle class="text-gray-700" stroke-width="8" stroke="currentColor" fill="transparent" r="40" cx="50"
-                  cy="50" />
-                <!-- Countdown circle -->
-                <circle class="text-yellow-400 transition-all duration-100" stroke-width="8" stroke="currentColor"
-                  fill="transparent" r="40" cx="50" cy="50" :stroke-dasharray="circleCircumference"
-                  :stroke-dashoffset="circleCountdown" />
-              </svg>
-              <div class="absolute inset-0 flex items-center justify-center text-5xl font-bold">
-                X{{ combo }}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="grid grid-cols-3 gap-2 gap-y-10 sm:gap-2 md:gap-2 lg:gap-2 mt-[10vh]">
-          <div v-for="hole in numHole" :key="hole">
-            <div v-show="position === hole && isMole && !isHit" @click="clickObject()"
-              class="flex justify-center hover:cursor-pointer">
-              <img :src="moleImg" class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2" />
-            </div>
-            <div v-show="position === hole && !isMole && !isHit" @click="clickMiss()"
-              class="flex justify-center hover:cursor-pointer">
-              <img :src="bombImg" class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2" />
-            </div>
-            <div v-show="!(position === hole && !isHit)" class="flex justify-center">
-              <img :src="holeImg" class="w-30 sm:w-3/4 md:w-2/3 lg:w-3/5 xl:w-1/2" />
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 </template>
 
