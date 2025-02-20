@@ -10,6 +10,17 @@
 # 🐷🥘 MhooJuum Game
 The MhooJuum project is a game developed using Vue.js, where players must hit appearing objects within a time limit to earn points. The game consists of several holes where moles randomly pop up, and players must react quickly to hit them by clicking on them before they disappear, and try to avoid clicking on the bomb.
 
+# 🎪 Game Rules
+## Mole Character 🦫
+- Click on the mole to earn points.
+- Avoid clicking on bombs—clicking them will reduce points or time.
+## Mouse Character 🐭
+- Click on the mouse to earn points.
+- Avoid clicking on the cat—clicking it will reduce points or time.
+## MhooJuum Character 🥓
+- Click on the boiled pork to earn points.
+- Avoid clicking on the raw pork—clicking it will reduce points or time.
+
 # 🐟 Features
 ## 🦁 Home Page
 - Play Button
@@ -32,5 +43,7 @@ The MhooJuum project is a game developed using Vue.js, where players must hit ap
   - A record of the best scores achieved, allowing players to track their highest performance.
 - Back Button
   - Allows players to return to the home page and reset the game.
+
+
 # 🐄 Demo
 [Video](https://drive.google.com/file/d/1jo7-cslu9WpPaFx913g9-jBjavebchPC/view?usp=drive_link)
